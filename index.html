@@ -1,192 +1,57 @@
-<!doctype html>
-<html lang="en" class="h-full">
+<!DOCTYPE html>
+<html lang="en">
+
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>GoRoyal India - Categories</title>
-  <script src="https://cdn.tailwindcss.com"></script>
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
-
-  <style>
-    body {
-      box-sizing: border-box;
-      font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
-    }
-
-    .status-bar { background: linear-gradient(135deg, #4ECDC4 0%, #44A08D 100%); }
-    .search-bar { background: white; border-radius: 8px; box-shadow: 0 2px 8px rgba(0,0,0,0.1); }
-
-    .sidebar-item { transition: all 0.2s ease; }
-    .sidebar-item:hover { background: #f0f0f0; }
-    .sidebar-item.active { background: #e8e8e8; border-left: 3px solid #FF9900; }
-
-    .category-card {
-      background: white;
-      border-radius: 12px;
-      box-shadow: 0 2px 8px rgba(0,0,0,0.08);
-      transition: all 0.2s ease;
-      cursor: pointer;
-    }
-    .category-card:hover {
-      transform: translateY(-2px);
-      box-shadow: 0 4px 16px rgba(0,0,0,0.12);
-    }
-
-    .live-badge { background: #E31837; animation: pulse 2s infinite; }
-    @keyframes pulse { 0%,100%{opacity:1} 50%{opacity:.7} }
-
-    ::-webkit-scrollbar { width: 4px; }
-    ::-webkit-scrollbar-thumb { background: #ccc; border-radius: 2px; }
-  </style>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Antigravity | Shop</title>
+    <link rel="stylesheet" href="style.css">
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;700&display=swap" rel="stylesheet">
+    <script src="https://unpkg.com/lucide@latest"></script>
 </head>
 
-<body class="h-full bg-gray-200 overflow-auto">
+<body>
+    <!-- Header -->
+    <header class="app-header">
+        <div class="header-content">
+            <button class="menu-btn mobile-only"><i data-lucide="menu"></i></button>
+            <div class="logo">
+                <span class="logo-icon"><i data-lucide="zap"></i></span>
+                <span class="logo-text">GoGrocy</span>
+            </div>
+            <div class="search-bar">
+                <i data-lucide="search" class="search-icon"></i>
+                <input type="text" placeholder="Search GoGrocy Products...">
+                <i data-lucide="camera" class="camera-icon"></i>
+            </div>
+            <div class="header-actions desktop-only">
+                <button class="icon-btn"><i data-lucide="user"></i></button>
+                <button class="icon-btn"><i data-lucide="shopping-cart"></i></button>
+            </div>
+        </div>
+    </header>
 
-<!-- Search Bar -->
-<div class="status-bar px-3 pb-3 flex justify-center">
-  <div class="search-bar flex items-center px-3 py-2.5 w-[92%] max-w-2xl">
-    <svg class="w-5 h-5 text-gray-400 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-        d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"/>
-    </svg>
-    <!--input type="text"  placeholder="Search GoRoyal.in">
-    class="flex-1 text-sm text-gray-700 outline-none bg-transparent"-->
-    <input type="text" id="searchInput" placeholder="Search GoRoyal.in"
-class="flex-1 text-sm text-gray-700 outline-none bg-transparent">
+    <!-- Main Layout -->
+    <div class="app-container">
+        <!-- Sidebar Navigation -->
+        <aside class="sidebar">
+            <nav class="category-nav">
+                <!-- Categories will be injected by JS -->
+            </nav>
+        </aside>
 
-  </div>
-</div>
-
-<div class="flex flex-1 overflow-hidden">
-
-  <!-- Sidebar -->
-  <div class="w-1/4 bg-white overflow-y-auto border-r border-gray-100">
-
-    <div class="sidebar-item active flex flex-col items-center py-3 px-2 text-center cursor-pointer">
-      <span class="text-xs text-gray-800 font-medium">Mobiles & Electronics</span>
+        <!-- Main Content Area -->
+        <main class="main-content">
+            <div class="content-header">
+                <h2 id="category-title">Mobiles & Electronics</h2>
+            </div>
+            <div class="product-grid" id="product-grid">
+                <!-- Products will be injected by JS -->
+            </div>
+        </main>
     </div>
 
-    <div class="sidebar-item flex flex-col items-center py-3 px-2 text-center cursor-pointer">
-      <span class="text-xs text-gray-700">Fashion</span>
-    </div>
-
-    <div class="sidebar-item flex flex-col items-center py-3 px-2 text-center cursor-pointer">
-      <span class="text-xs text-gray-700">Books</span>
-    </div>
-
-  </div>
-
-  <!-- Main -->
-  <div class="w-3/4 bg-gray-50 overflow-y-auto p-3">
-    <h2 class="text-base font-semibold text-gray-800 mb-3">Mobiles & Electronics</h2>
-
-    <div class="grid grid-cols-3 gap-2">
-
-      <div class="category-card p-2 flex flex-col items-center">
-        <!--div class="w-12 h-12 mb-1 flex items-center justify-center">
-          📱
-        </div -->
-        <div class="w-12 h-12 mb-1 flex items-center justify-center">
-          <img src="https://media.discordapp.net/attachments/1468628266251325635/1469280833822261399/tv.png?ex=698715e8&is=6985c468&hm=13755dab86af113c74cd6aa8f913be4dcd0941221c9696023726a04db7adf8b8&=&format=webp&quality=lossless&width=625&height=625" alt="Television" class="w-10 h-10 object-contain">
-        </div>
-        <span class="text-xs text-gray-700 text-center">Television</span>
-      </div>
-
-      <div class="category-card p-2 flex flex-col items-center">
-        <div class="w-12 h-12 mb-1 flex items-center justify-center">
-          <img src="https://media.discordapp.net/attachments/1468628266251325635/1469283896209309758/phone.png?ex=698718c2&is=6985c742&hm=7e536da0fbd303bf849edbbc1c0fd0fb4eca228982a8bd63de133b93ddc36f9c&=&format=webp&quality=lossless&width=765&height=510" alt="Mobile" class="w-10 h-10 object-contain">
-        </div>
-        <span class="text-xs text-gray-700 text-center">Mobile</span>
-      </div>
-
-      <div class="category-card p-2 flex flex-col items-center">
-        <div class="w-12 h-12 mb-1 flex items-center justify-center">
-          <img src="https://media.discordapp.net/attachments/1468628266251325635/1469283893587873856/camara.png?ex=698718c2&is=6985c742&hm=981e9dc2a2118b564aa033e0f9d785770d888afc5a262eb4786687024f2f9b74&=&format=webp&quality=lossless&width=833&height=469" alt="Camera" class="w-10 h-10 object-contain">
-        </div>
-        <span class="text-xs text-gray-700 text-center">Camera</span>
-      </div>
-
-      <div class="category-card p-2 flex flex-col items-center">
-        <div class="w-12 h-12 mb-1 flex items-center justify-center">
-          <img src="https://media.discordapp.net/attachments/1468628266251325635/1469283894040727552/headphone.png?ex=698718c2&is=6985c742&hm=12232f5c7c9ce2ce31e8fe158e0cec8ba3184af1224922f274893f58601c3c84&=&format=webp&quality=lossless&width=556&height=701" alt="headphone" class="w-10 h-10 object-contain">
-        </div>
-        <span class="text-xs text-gray-700 text-center">Headphone</span>
-      </div>
-
-      <div class="category-card p-2 flex flex-col items-center">
-        <div class="w-12 h-12 mb-1 flex items-center justify-center">
-          <img src="https://media.discordapp.net/attachments/1468628266251325635/1469283895563518106/monitor.png?ex=698718c2&is=6985c742&hm=5689ebe9975d5fcbcafadc5c8dd325ff4caf08dd82a5e704b1690f55b62d00c1&=&format=webp&quality=lossless&width=650&height=600" alt="Monitor" class="w-10 h-10 object-contain">
-        </div>
-        <span class="text-xs text-gray-700 text-center">Monitors</span>
-      </div>
-
-      <div class="category-card p-2 flex flex-col items-center">
-        <div class="w-12 h-12 mb-1 flex items-center justify-center">
-          <img src="https://media.discordapp.net/attachments/1468628266251325635/1469283896830197841/speakers.png?ex=698718c2&is=6985c742&hm=20dc9465af0ac8c01d44805157f71a0b97039fdbb3cb97eb97d3e762e665161e&=&format=webp&quality=lossless&width=600&height=538" alt="speaker" class="w-10 h-10 object-contain">
-        </div>
-        <span class="text-xs text-gray-700 text-center">speakers</span>
-      </div>
-
-    </div>
-  </div>
-
-</div>
-
-<!--script>
-  const title = document.querySelector('h2');
-
-  document.querySelectorAll('.sidebar-item').forEach(item => {
-    item.addEventListener('click', function () {
-      // Active highlight
-      document.querySelectorAll('.sidebar-item').forEach(i => i.classList.remove('active'));
-      this.classList.add('active');
-
-      // Change title text
-      title.textContent = this.innerText.trim();
-    });
-  });
-
-  // Card click effect
-  document.querySelectorAll('.category-card').forEach(card => {
-    card.addEventListener('click', function() {
-      this.style.transform = 'scale(0.95)';
-      setTimeout(() => this.style.transform = '', 150);
-    });
-  });
-</script-->
-
-<script>
-  const title = document.querySelector('h2');
-  const searchInput = document.getElementById('searchInput');
-  const cards = document.querySelectorAll('.category-card');
-
-  // Sidebar click + title change
-  document.querySelectorAll('.sidebar-item').forEach(item => {
-    item.addEventListener('click', function () {
-      document.querySelectorAll('.sidebar-item').forEach(i => i.classList.remove('active'));
-      this.classList.add('active');
-      title.textContent = this.innerText.trim();
-    });
-  });
-
-  // Card click animation
-  cards.forEach(card => {
-    card.addEventListener('click', function() {
-      this.style.transform = 'scale(0.95)';
-      setTimeout(() => this.style.transform = '', 150);
-    });
-  });
-
-  // 🔎 Search functionality
-  searchInput.addEventListener('input', function () {
-    const value = this.value.toLowerCase();
-
-    cards.forEach(card => {
-      const text = card.innerText.toLowerCase();
-      card.style.display = text.includes(value) ? "flex" : "none";
-    });
-  });
-</script>
-
+    <script src="script.js"></script>
 </body>
+
 </html>
