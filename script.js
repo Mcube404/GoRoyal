@@ -1,3 +1,24 @@
+// ===== Theme Toggle =====
+const themeToggle = document.getElementById("theme-toggle");
+const themeIcon = document.getElementById("theme-icon");
+
+// Load saved theme
+const savedTheme = localStorage.getItem("theme");
+if (savedTheme === "dark") {
+    document.body.classList.add("dark");
+    themeIcon.setAttribute("data-lucide", "sun");
+}
+
+// Toggle theme
+themeToggle.addEventListener("click", () => {
+    document.body.classList.toggle("dark");
+
+    const isDark = document.body.classList.contains("dark");
+    localStorage.setItem("theme", isDark ? "dark" : "light");
+
+    themeIcon.setAttribute("data-lucide", isDark ? "sun" : "moon");
+    lucide.createIcons();
+});
 // Data Definitions
 const categories = [
     { id: 'automobiles', label: 'Automobiles', icon: 'car' },
@@ -183,3 +204,4 @@ if (menuBtn) {
         sidebar.classList.toggle('open');
     });
 }
+
