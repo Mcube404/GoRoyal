@@ -13,6 +13,43 @@
     --sidebar-width-desktop: 250px;
     --header-height: 60px;
 }
+/* ===== Dark Mode ===== */
+body.dark {
+    --background: #121212;
+    --card-bg: #1e1e1e;
+    --text-primary: #e0e0e0;
+    --text-secondary: #b0b0b0;
+    --border: #2a2a2a;
+    --active-item: #1f3b3a;
+}
+
+/* Header + layouts */
+body.dark .app-header {
+    background-color: #1f1f1f;
+}
+
+body.dark .sidebar,
+body.dark .main-content {
+    background-color: #181818;
+}
+
+body.dark .search-bar {
+    background: #2a2a2a;
+}
+
+body.dark .search-bar input {
+    background: transparent;
+    color: #e0e0e0;
+}
+
+body.dark .product-card {
+    background: var(--card-bg);
+    border-color: var(--border);
+}
+
+body.dark .nav-item:hover {
+    background: #222;
+}
 
 body {
     font-family: 'Roboto', sans-serif;
@@ -300,3 +337,4 @@ body {
     }
 }
 .sidebar.open{display:flex;position:absolute;z-index:99;height:100%;top:60px;width:200px;border-right:1px solid #ccc;}
+
