@@ -1,212 +1,227 @@
-
-// Data Definitions
+// --- Data ---
 const categories = [
-    { id: 'automobiles', label: 'Automobiles', icon: 'car' },
-    { id: 'watches', label: 'Watches', icon: 'watch' },
-    { id: 'electronics', label: 'Electronics', icon: 'smartphone' }, // Previously "Mobiles & Electronics"
-    { id: 'appliances', label: 'Home Appliances', icon: 'washing-machine' },
-    { id: 'bags_footwear', label: 'Bags & Footwear', icon: 'shopping-bag' },
-    { id: 'home_decor', label: 'Home Decor', icon: 'armchair' },
-    { id: 'fitness', label: 'Fitness', icon: 'dumbbell' },
-    { id: 'sports', label: 'Sports', icon: 'trophy' },
-    { id: 'kids', label: 'Kids & Toddlers', icon: 'baby' },
-    { id: 'pets', label: 'Pet Supplies', icon: 'dog' },
-    { id: 'men', label: 'Men', icon: 'user' },
-    { id: 'women', label: 'Women', icon: 'user-check' }
+    { id: 'automobiles', label: 'AUTOMOBILES', icon: 'ri-motorbike-line' },
+    { id: 'watches', label: 'WATCHES', icon: 'ri-time-line' },
+    { id: 'electronics', label: 'ELECTRONICS', icon: 'ri-macbook-line' },
+    { id: 'home-appliances', label: 'HOME APPLIANCES', icon: 'ri-fridge-line' },
+    { id: 'bags-footwear', label: 'BAGS and FOOTWEAR', icon: 'ri-handbag-line' },
+    { id: 'home-decor', label: 'HOME DECOR', icon: 'ri-home-smile-line' },
+    { id: 'fitness', label: 'FITNESS', icon: 'ri-run-line' },
+    { id: 'sports', label: 'SPORTS', icon: 'ri-basketball-line' },
+    { id: 'kids-toddlers', label: 'KIDS AND TODDLERS', icon: 'ri-bear-smile-line' },
+    { id: 'pet-supplies', label: 'PET SUPPLIES', icon: 'ri-baidu-line' },
+    { id: 'men', label: 'MEN', icon: 'ri-men-line' },
+    { id: 'women', label: 'WOMEN', icon: 'ri-women-line' }
 ];
-
-const products = {
-    'automobiles': [
-        { id: 'a1', name: 'Bikes', icon: 'bike' },
-        { id: 'a2', name: 'Cars', icon: 'car' },
-        { id: 'a3', name: 'Helmets', icon: 'shield' },
-        { id: 'a4', name: 'Bike Accessories', icon: 'settings' },
-        { id: 'a5', name: 'Car Accessories', icon: 'wrench' },
-        { id: 'a6', name: 'EV', icon: 'zap' }
-    ],
-    'watches': [
-        { id: 'w1', name: 'Smart Watch', icon: 'watch' },
-        { id: 'w2', name: 'Analog Watch', icon: 'clock' },
-        { id: 'w3', name: 'Digital Watch', icon: 'timer' },
-        { id: 'w4', name: 'Digi-Log Watch', icon: 'watch' },
-        { id: 'w5', name: 'Vintage Series', icon: 'pocket-watch' } // pocket-watch might not exist in all sets, falling back to 'watch' if needed or check docs. Lucide has 'watch'. 
-    ],
-    'electronics': [
-        { id: 'e1', name: 'Television', icon: 'tv' },
-        { id: 'e2', name: 'Mobile', icon: 'smartphone' },
-        { id: 'e3', name: 'Laptop', icon: 'laptop' },
-        { id: 'e4', name: 'Gaming', icon: 'gamepad-2' },
-        { id: 'e5', name: 'Camera', icon: 'camera' },
-        { id: 'e6', name: 'Headphones', icon: 'headphones' },
-        { id: 'e7', name: 'Monitor', icon: 'monitor' },
-        { id: 'e8', name: 'Speaker', icon: 'speaker' }
-    ],
-    'appliances': [
-        { id: 'ha1', name: 'Refrigerator', icon: 'box' }, // refrigerator icon not standard, using box or snowflake
-        { id: 'ha2', name: 'AC', icon: 'wind' },
-        { id: 'ha3', name: 'Washing Machine', icon: 'washing-machine' }, // checking availability, substitute with droplets if needed
-        { id: 'ha4', name: 'Dish Washer', icon: 'droplets' },
-        { id: 'ha5', name: 'Air Fryer', icon: 'flame' },
-        { id: 'ha6', name: 'Kitchen Supplies', icon: 'utensils' },
-        { id: 'ha7', name: 'Air Purifier', icon: 'fan' }
-    ],
-    'bags_footwear': [
-        { id: 'bf1', name: 'Womens Footwear', icon: 'footprints' },
-        { id: 'bf2', name: 'Mens Footwear', icon: 'footprints' },
-        { id: 'bf3', name: 'Kids Footwear', icon: 'footprints' },
-        { id: 'bf4', name: 'Women Bags', icon: 'shopping-bag' },
-        { id: 'bf5', name: 'Men Bags', icon: 'briefcase' },
-        { id: 'bf6', name: 'Travel Bags', icon: 'luggage' }
-    ],
-    'home_decor': [
-        { id: 'hd1', name: 'Wood Furniture', icon: 'sofa' },
-        { id: 'hd2', name: 'Kitchen Storage', icon: 'package' },
-        { id: 'hd3', name: 'Home Textile', icon: 'layers' },
-        { id: 'hd4', name: 'Bedroom Accessories', icon: 'bed' }
-    ],
-    'fitness': [
-        { id: 'f1', name: 'Treadmill', icon: 'activity' },
-        { id: 'f2', name: 'Fitness Bike', icon: 'bike' },
-        { id: 'f3', name: 'Walking Pods', icon: 'footprints' },
-        { id: 'f4', name: 'Weights', icon: 'dumbbell' },
-        { id: 'f5', name: 'Home Gym', icon: 'home' },
-        { id: 'f6', name: 'Gym Accessories', icon: 'circle' }
-    ],
-    'sports': [
-        { id: 's1', name: 'Cricket', icon: 'circle-dot' }, // ball
-        { id: 's2', name: 'Football', icon: 'disc' },
-        { id: 's3', name: 'Badminton', icon: 'feather' },
-        { id: 's4', name: 'Swimming', icon: 'waves' },
-        { id: 's5', name: 'Table Tennis', icon: 'circle' },
-        { id: 's6', name: 'Boxing', icon: 'swords' } // approximation
-    ],
-    'kids': [
-        { id: 'k1', name: 'Girls Clothing', icon: 'shirt' },
-        { id: 'k2', name: 'Boys Clothing', icon: 'shirt' },
-        { id: 'k3', name: 'Baby Care', icon: 'heart' },
-        { id: 'k4', name: 'Kids Toys', icon: 'puzzle' } // puzzle piece
-    ],
-    'pets': [
-        { id: 'p1', name: 'Dog Food', icon: 'bone' },
-        { id: 'p2', name: 'Cat Food', icon: 'fish' },
-        { id: 'p3', name: 'Birds', icon: 'feather' },
-        { id: 'p4', name: 'Aquarium', icon: 'droplets' }
-    ],
-    'men': [
-        { id: 'm1', name: 'Top Wear', icon: 'shirt' },
-        { id: 'm2', name: 'Bottom Wear', icon: 'scissors' }, // approximation for tailored
-        { id: 'm3', name: 'Inner Wear', icon: 'layers' },
-        { id: 'm4', name: 'Ethnic Wear', icon: 'star' },
-        { id: 'm5', name: 'Sports Wear', icon: 'activity' },
-        { id: 'm6', name: 'Winter Wear', icon: 'thermometer-snowflake' },
-        { id: 'm7', name: 'Accessories', icon: 'watch' }
-    ],
-    'women': [
-        { id: 'wm1', name: 'Top Wear', icon: 'shirt' },
-        { id: 'wm2', name: 'Bottom Wear', icon: 'scissors' },
-        { id: 'wm3', name: 'Inner Wear', icon: 'layers' },
-        { id: 'wm4', name: 'Ethnic Wear', icon: 'star' },
-        { id: 'wm5', name: 'Sports Wear', icon: 'activity' },
-        { id: 'wm6', name: 'Accessories', icon: 'shopping-bag' }
-    ]
+const subcategories = {
+    'automobiles': ['bikes', 'cars', 'helmets', 'bike accessories', 'car accessories', 'EV'],
+    'watches': ['smart watch', 'analog watch', 'digital watch', 'digi log watch', 'vintage series'],
+    'electronics': ['television', 'mobile', 'laptop', 'gaming', 'camera', 'headphones', 'monitor', 'speaker'],
+    'home-appliances': ['refrigerator', 'AC', 'washing machine', 'dish washer', 'air fryer', 'kitchen supplies', 'air purifier'],
+    'bags-footwear': ['womens footwear', 'mens footwear', 'kids footwear', 'women bags', 'men bags', 'travel bags and luggage'],
+    'home-decor': ['wood furniture', 'kitchen and storage', 'home textile', 'bedroom accessories'],
+    'fitness': ['treadmill', 'fitness bike', 'walking pods', 'weights', 'home gym', 'gym accessories'],
+    'sports': ['cricket', 'football', 'badminton', 'swimming', 'table tennis', 'boxing'],
+    'kids-toddlers': ['girls clothing', 'boys clothing', 'baby care', 'kids toys'],
+    'pet-supplies': ['dog food', 'cat food', 'birds', 'aquarium'],
+    'men': ['top wear', 'bottom wear', 'inner wear', 'ethnic wear', 'sports wear', 'winter wear', 'accessories'],
+    'women': ['top wear', 'bottom wear', 'inner wear', 'ethnic wear', 'sports wear', 'accessories']
 };
-
-// DOM Elements
-const categoryNav = document.querySelector('.category-nav');
-const productGrid = document.querySelector('.product-grid');
-const categoryTitle = document.getElementById('category-title');
-
-// Render Sidebar
-function renderSidebar() {
-    categoryNav.innerHTML = categories.map((cat, index) => `
-        <div class="nav-item ${index === 0 ? 'active' : ''}" data-id="${cat.id}">
-            <div class="nav-icon"><i data-lucide="${cat.icon}"></i></div>
-            <span class="nav-label">${cat.label}</span>
-        </div>
-    `).join('');
-    // Re-initialize icons
-    if (typeof lucide !== 'undefined') {
-        lucide.createIcons();
-    }
-    addNavListeners();
+// --- References ---
+const sidebarList = document.getElementById('sidebar-categories');
+const contentArea = document.getElementById('contentArea');
+const themeToggle = document.getElementById('themeToggle');
+const toggleIcon = themeToggle.querySelector('i');
+const searchInput = document.getElementById('searchInput');
+let currentCatId = null;
+// --- Initialization ---
+initTheme();
+renderSidebar();
+// --- Theme Logic ---
+function initTheme() {
+    const saved = localStorage.getItem('theme') || 'dark';
+    document.documentElement.setAttribute('data-theme', saved);
+    updateToggleIcon(saved);
+    themeToggle.addEventListener('click', (e) => {
+        createRipple(e);
+        const current = document.documentElement.getAttribute('data-theme');
+        const next = current === 'dark' ? 'light' : 'dark';
+        document.documentElement.setAttribute('data-theme', next);
+        localStorage.setItem('theme', next);
+        updateToggleIcon(next);
+    });
 }
-
-// Render Products
-function renderProducts(categoryId) {
-    const items = products[categoryId] || [];
-    const category = categories.find(c => c.id === categoryId);
-
-    if (category) {
-        categoryTitle.textContent = category.label;
-    }
-
-    productGrid.innerHTML = items.map(item => `
-        <div class="product-card">
-            <div class="product-icon"><i data-lucide="${item.icon}" size="32"></i></div>
-            <span class="product-label">${item.name}</span>
-        </div>
-    `).join('');
-
-    if (typeof lucide !== 'undefined') {
-        lucide.createIcons();
-    }
+function updateToggleIcon(theme) {
+    // Simple rotation/morph
+    toggleIcon.style.opacity = 0;
+    setTimeout(() => {
+        toggleIcon.className = theme === 'dark' ? 'ri-moon-line' : 'ri-sun-line';
+        toggleIcon.style.opacity = 1;
+    }, 200);
 }
-
-// Add Click Listeners
-function addNavListeners() {
-    document.querySelectorAll('.nav-item').forEach(item => {
-        item.addEventListener('click', () => {
-            // Remove active class from all
-            document.querySelectorAll('.nav-item').forEach(nav => nav.classList.remove('active'));
-            // Add active class to clicked
-            item.classList.add('active');
-
-            // Render content
-            const catId = item.getAttribute('data-id');
-            renderProducts(catId);
+// --- Search Logic ---
+searchInput.addEventListener('input', (e) => {
+    const query = e.target.value.toLowerCase().trim();
+    if (!query) {
+        if (currentCatId) {
+            renderSubcategories(currentCatId);
+        } else {
+            contentArea.innerHTML = ''; // Or welcome message
+        }
+        return;
+    }
+    let results = [];
+    // Iterate all categories
+    Object.keys(subcategories).forEach(catId => {
+        const subs = subcategories[catId];
+        const matches = subs.filter(s => s.toLowerCase().includes(query));
+        if (matches.length > 0) {
+            const catLabel = categories.find(c => c.id === catId)?.label || catId;
+            matches.forEach(m => results.push({ sub: m, catId: catId, catLabel: catLabel }));
+        }
+    });
+    renderSearchResults(results, query);
+});
+function renderSearchResults(results, query) {
+    if (results.length === 0) {
+        contentArea.innerHTML = `<div class="card animate-in"><div class="card-content"><h3>No Items Found</h3><p>No matches for "${query}"</p></div></div>`;
+        return;
+    }
+    document.getElementById('pageTitle').textContent = `Search Results`;
+    document.getElementById('breadcrumb').textContent = `SEARCH / "${query}"`;
+    let html = '<div class="subgrid">';
+    results.forEach((item, i) => {
+        html += `
+        <div class="card animate-in" style="animation-delay: ${i * 50}ms" data-sub="${item.sub}" data-cat="${item.catId}">
+            <div class="card-content">
+                <div class="badge" style="background:var(--accent); color:white; margin-bottom:8px">${item.catLabel}</div>
+                <div class="title">${item.sub}</div>
+                <div class="meta">View Top Products</div>
+            </div>
+        </div>`;
+    });
+    html += '</div><div id="productsHolder"></div>';
+    contentArea.innerHTML = html;
+    // Add Handlers
+    contentArea.querySelectorAll('.card').forEach(card => {
+        addTiltEffect(card);
+        card.addEventListener('click', (e) => {
+            createRipple(e);
+            showProducts(card.dataset.sub);
         });
     });
 }
-
-// Initial Render
-document.addEventListener('DOMContentLoaded', () => {
-    renderSidebar();
-    // Load the first category ('automobiles') by default
-    renderProducts('automobiles');
-});
-
-// Mobile Menu Toggle
-const menuBtn = document.querySelector('.menu-btn');
-const sidebar = document.querySelector('.sidebar');
-
-if (menuBtn) {
-    menuBtn.addEventListener('click', () => {
-        sidebar.classList.toggle('open');
+// --- Rendering ---
+function renderSidebar() {
+    sidebarList.innerHTML = categories.map((c, i) => `
+    <div class="cat animate-in" style="animation-delay: ${i * 40}ms" data-id="${c.id}">
+        <i class="${c.icon}"></i> ${c.label}
+    </div>
+`).join('');
+    sidebarList.querySelectorAll('.cat').forEach(cat => {
+        cat.addEventListener('click', (e) => {
+            createRipple(e);
+            // Active class
+            sidebarList.querySelectorAll('.cat').forEach(x => x.classList.remove('active'));
+            cat.classList.add('active');
+            currentCatId = cat.dataset.id;
+            searchInput.value = ''; // Clear search on cat switch
+            renderSubcategories(currentCatId);
+        });
     });
-}// ===== Theme Toggle (FIXED) =====
-document.addEventListener("DOMContentLoaded", () => {
-    const themeToggle = document.getElementById("theme-toggle");
-    const themeIcon = document.getElementById("theme-icon");
-
-    if (!themeToggle || !themeIcon) return;
-
-    // Load saved theme
-    const savedTheme = localStorage.getItem("theme");
-    if (savedTheme === "dark") {
-        document.body.classList.add("dark");
-        themeIcon.setAttribute("data-lucide", "sun");
+}
+function renderSubcategories(catId, filter = '') {
+    const cat = categories.find(c => c.id === catId);
+    document.getElementById('pageTitle').textContent = cat.label;
+    document.getElementById('breadcrumb').textContent = `HOME / ${cat.label}`;
+    let subs = subcategories[catId] || [];
+    // Filter
+    if (filter) {
+        subs = subs.filter(s => s.toLowerCase().includes(filter));
     }
-
-    // Toggle theme
-    themeToggle.addEventListener("click", () => {
-        document.body.classList.toggle("dark");
-
-        const isDark = document.body.classList.contains("dark");
-        localStorage.setItem("theme", isDark ? "dark" : "light");
-
-        themeIcon.setAttribute("data-lucide", isDark ? "sun" : "moon");
-        lucide.createIcons();
+    if (subs.length === 0) {
+        contentArea.innerHTML = `<div class="card animate-in"><div class="card-content"><h3>No Items Found</h3><p>Try a different search term.</p></div></div>`;
+        return;
+    }
+    let html = '<div class="subgrid">';
+    subs.forEach((s, i) => {
+        html += `
+        <div class="card animate-in" style="animation-delay: ${i * 50}ms" data-sub="${s}">
+            <div class="card-content">
+                <div class="title">${s}</div>
+                <div class="meta">View Top Products</div>
+            </div>
+        </div>`;
     });
-});
-
-
+    html += '</div><div id="productsHolder"></div>';
+    contentArea.innerHTML = html;
+    // Add 3D Tilt and Click handlers
+    contentArea.querySelectorAll('.card').forEach(card => {
+        addTiltEffect(card);
+        card.addEventListener('click', (e) => {
+            createRipple(e);
+            showProducts(card.dataset.sub);
+        });
+    });
+}
+function showProducts(sub) {
+    const holder = document.getElementById('productsHolder');
+    // Logic: Show exactly 2 products: Sponsored & Top Rated
+    const products = [
+        { type: 'sponsored', label: 'Sponsored', name: `${sub} - Premium Choice`, price: '₹' + (Math.random() * 5000 + 2000).toFixed(0) },
+        { type: 'top-rated', label: 'Top Rated Product', name: `${sub} - Best Seller`, price: '₹' + (Math.random() * 3000 + 1000).toFixed(0) }
+    ];
+    let html = `<h2 class="animate-in" style="margin-top:40px; margin-bottom: 20px;">${sub}</h2><div class="products">`;
+    products.forEach((p, i) => {
+        html += `
+        <div class="card animate-in" style="animation-delay: ${i * 80}ms">
+            <div class="card-content">
+                <div class="badge ${p.type}">${p.label}</div>
+                <div style="height:180px; background:rgba(0,0,0,0.1); border-radius:12px; margin-bottom:12px; display:flex; align-items:center; justify-content:center;">
+                   <i class="ri-shopping-bag-3-line" style="font-size:4rem; opacity:0.5"></i>
+                </div>
+                <div class="title" style="font-size:1.4rem">${p.name}</div>
+                <div style="color:var(--accent); font-weight:bold; font-size:1.2rem">${p.price}</div>
+                <div class="meta" style="margin-top:8px">★★★★★ (4.9)</div>
+            </div>
+        </div>`;
+    });
+    html += '</div>';
+    holder.innerHTML = html;
+    holder.scrollIntoView({ behavior: 'smooth', block: 'start' });
+    holder.querySelectorAll('.card').forEach(c => {
+        addTiltEffect(c);
+    });
+}
+// --- Effects ---
+// 3D Tilt
+function addTiltEffect(card) {
+    card.addEventListener('mousemove', (e) => {
+        const rect = card.getBoundingClientRect();
+        const x = e.clientX - rect.left;
+        const y = e.clientY - rect.top;
+        const centerX = rect.width / 2;
+        const centerY = rect.height / 2;
+        const rotateX = ((y - centerY) / centerY) * -10;
+        const rotateY = ((x - centerX) / centerX) * 10;
+        card.style.transform = `perspective(1000px) rotateX(${rotateX}deg) rotateY(${rotateY}deg) scale(1.02)`;
+    });
+    card.addEventListener('mouseleave', () => {
+        card.style.transform = 'perspective(1000px) rotateX(0) rotateY(0) scale(1)';
+    });
+}
+// Ripple
+function createRipple(event) {
+    const button = event.currentTarget;
+    const circle = document.createElement('span');
+    const diameter = Math.max(button.clientWidth, button.clientHeight);
+    const radius = diameter / 2;
+    const rect = button.getBoundingClientRect();
+    circle.style.width = circle.style.height = `${diameter}px`;
+    circle.style.left = `${event.clientX - rect.left - radius}px`;
+    circle.style.top = `${event.clientY - rect.top - radius}px`;
+    circle.classList.add('ripple');
+    const ripple = button.getElementsByClassName('ripple')[0];
+    if (ripple) ripple.remove();
+    button.appendChild(circle);
+}
