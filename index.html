@@ -49,7 +49,7 @@
             --text-primary: #2d3436;
             --text-secondary: #636e72;
 
-            --accent: #6c5ce7;
+            --accent: #5849be;
             --accent-glow: rgba(108, 92, 231, 0.4);
 
             --shadow: 0 10px 40px -10px rgba(100, 100, 200, 0.15);
@@ -188,25 +188,28 @@
         }
 
         /* Logo */
-        .logo {
-            font-size: 1.8rem;
-            font-weight: 900;
-            background: linear-gradient(135deg, #ffd700, #ff8c00);
-            background-clip: text;
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-            margin-bottom: 24px;
-            padding: 0 8px;
+        /* Logo */
+        .logo-container {
             display: flex;
             align-items: center;
-            gap: 10px;
-            letter-spacing: -0.5px;
+            gap: 12px;
+            padding: 0 8px;
+            margin-bottom: 24px;
+            text-decoration: none;
         }
 
-        .logo i {
-            font-size: 1.5rem;
-            color: #ffd700;
-            -webkit-text-fill-color: #ffd700;
+
+
+
+
+        /* Mobile Logo Specifics - Hidden on Desktop */
+        /* Header Logo (Unified) */
+        .mobile-logo-container {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            margin-right: 12px;
+            text-decoration: none;
         }
 
         /* Categories */
@@ -256,6 +259,11 @@
 
         [data-theme="light"] .cat.active {
             color: white;
+            box-shadow: 0 5px 15px var(--accent-glow);
+        }
+
+        [data-theme="light"] .cat:hover {
+            background: rgba(0, 0, 0, 0.05);
         }
 
         /* Theme Toggle Button */
@@ -323,6 +331,25 @@
             transform: perspective(1000px);
             transition: transform 0.1s;
             cursor: pointer;
+            overflow: hidden;
+            /* Ensure glow stays within rounded corners */
+        }
+
+        /* Proximity Spotlight Glow */
+        .card::after {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: radial-gradient(600px circle at var(--mouse-x) var(--mouse-y), rgba(255, 255, 255, 0.15), transparent 40%);
+            z-index: 2;
+            pointer-events: none;
+            opacity: 1;
+            /* Always active to show near-misses */
+            mix-blend-mode: overlay;
+            /* Better blending */
         }
 
         .card-content {
@@ -561,7 +588,7 @@
             }
 
             /* Logo Hidden in Sidebar */
-            .sidebar .logo {
+            .sidebar .logo-container {
                 display: none;
             }
 
@@ -606,6 +633,10 @@
                 display: none !important;
             }
 
+            .mobile-logo-container {
+                display: flex;
+            }
+
             /* Bottom Nav Visible */
             .bottom-nav {
                 display: flex;
@@ -633,36 +664,6 @@
                 font-size: 1rem;
             }
         }
-        .subcard-row {
-            display: flex;
-            align-items: center;
-            gap: 20px;
-        }
-        
-        .sub-img {
-            width: 90px;
-            height: 90px;
-            border-radius: 16px;
-            background: rgba(255,255,255,0.05);
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            overflow: hidden;
-            flex-shrink: 0;
-            border: 1px solid rgba(255,255,255,0.08);
-        }
-        
-        .sub-img img {
-            width: 80%;
-            height: 80%;
-            object-fit: contain;
-            filter: drop-shadow(0 0 8px var(--accent));
-        }
-        
-        .sub-text .title {
-            font-size: 1.4rem;
-            font-weight: 800;
-        }
 
         @media (max-width: 480px) {
             .subgrid {
@@ -687,9 +688,7 @@
 
     <div class="app">
         <aside class="sidebar glass" id="sidebar">
-            <div class="logo">
-                <i class="ri-vip-crown-fill"></i> Go Royal
-            </div>
+
             <div id="sidebar-categories"></div>
         </aside>
 
@@ -697,6 +696,11 @@
             <div class="header-row" style="display:flex; justify-content:space-between; align-items:center;">
                 <div style="display:flex; align-items:center;">
                     <button class="menu-toggle" id="menuToggle"><i class="ri-menu-2-line"></i></button>
+
+                    <a href="#" class="mobile-logo-container" onclick="renderHome(); return false;">
+                        <img src="assets/logo.png" alt="Go Royal" style="height: 60px;">
+                    </a>
+
                     <div>
                         <div class="breadcrumb" id="breadcrumb"
                             style="color:var(--text-secondary); text-transform:uppercase; letter-spacing:1px; font-size:0.8rem; margin-bottom:4px;">
@@ -720,6 +724,7 @@
     <script>
         // --- Data ---
         const categories = [
+            { id: 'home', label: 'HOME', icon: 'ri-home-4-fill' },
             { id: 'automobiles', label: 'AUTOMOBILES', icon: 'ri-motorbike-line' },
             { id: 'watches', label: 'WATCHES', icon: 'ri-time-line' },
             { id: 'electronics', label: 'ELECTRONICS', icon: 'ri-macbook-line' },
@@ -735,18 +740,99 @@
         ];
 
         const subcategories = {
-            'automobiles': ['bikes', 'cars', 'helmets', 'bike accessories', 'car accessories', 'EV'],
-            'watches': ['smart watch', 'analog watch', 'digital watch', 'digi log watch', 'vintage series'],
-            'electronics': ['television', 'mobile', 'laptop', 'gaming', 'camera', 'headphones', 'monitor', 'speaker'],
-            'home-appliances': ['refrigerator', 'AC', 'washing machine', 'dish washer', 'air fryer', 'kitchen supplies', 'air purifier'],
-            'bags-footwear': ['womens footwear', 'mens footwear', 'kids footwear', 'women bags', 'men bags', 'travel bags and luggage'],
-            'home-decor': ['wood furniture', 'kitchen and storage', 'home textile', 'bedroom accessories'],
-            'fitness': ['treadmill', 'fitness bike', 'walking pods', 'weights', 'home gym', 'gym accessories'],
-            'sports': ['cricket', 'football', 'badminton', 'swimming', 'table tennis', 'boxing'],
-            'kids-toddlers': ['girls clothing', 'boys clothing', 'baby care', 'kids toys'],
-            'pet-supplies': ['dog food', 'cat food', 'birds', 'aquarium'],
-            'men': ['top wear', 'bottom wear', 'inner wear', 'ethnic wear', 'sports wear', 'winter wear', 'accessories'],
-            'women': ['top wear', 'bottom wear', 'inner wear', 'ethnic wear', 'sports wear', 'accessories']
+            'automobiles': [
+                { name: 'Bikes', img: 'https://images.unsplash.com/photo-1558981403-c5f9899a28bc?w=400&q=80' },
+                { name: 'Cars', img: 'https://images.unsplash.com/photo-1552519507-da3b142c6e3d?w=400&q=80' },
+                { name: 'Helmets', img: 'https://images.unsplash.com/photo-1551028919-ac7eddce1d34?w=400&q=80' },
+                { name: 'Bike Accessories', img: 'https://images.unsplash.com/photo-1522850959516-58f958dfe2ad?w=400&q=80' },
+                { name: 'Car Accessories', img: 'https://images.unsplash.com/photo-1601362840469-51e4d8d58785?w=400&q=80' },
+                { name: 'EV', img: 'https://images.unsplash.com/photo-1593941707882-a5bba14938c7?w=400&q=80' }
+            ],
+            'watches': [
+                { name: 'Smart Watch', img: 'https://images.unsplash.com/photo-1579586337278-3befd40fd17a?w=400&q=80' },
+                { name: 'Analog Watch', img: 'https://images.unsplash.com/photo-1524805444758-089113d48a6d?w=400&q=80' },
+                { name: 'Digital Watch', img: 'https://images.unsplash.com/photo-1544117519-31a4b719223d?w=400&q=80' },
+                { name: 'Digi Log Watch', img: 'https://images.unsplash.com/photo-1622434641406-a158123450f9?w=400&q=80' },
+                { name: 'Vintage Series', img: 'https://images.unsplash.com/photo-1619149454179-8d7d9b9a6566?w=400&q=80' }
+            ],
+            'electronics': [
+                { name: 'Television', img: 'https://images.unsplash.com/photo-1593359677879-a4bb92f829d1?w=400&q=80' },
+                { name: 'Mobile', img: 'https://images.unsplash.com/photo-1511707171634-5f897ff02aa9?w=400&q=80' },
+                { name: 'Laptop', img: 'https://images.unsplash.com/photo-1496181133206-80ce9b88a853?w=400&q=80' },
+                { name: 'Gaming', img: 'https://images.unsplash.com/photo-1542751371-adc38448a05e?w=400&q=80' },
+                { name: 'Camera', img: 'https://images.unsplash.com/photo-1516035069371-29a1b244cc32?w=400&q=80' },
+                { name: 'Headphones', img: 'https://images.unsplash.com/photo-1505740420928-5e560c06d30e?w=400&q=80' },
+                { name: 'Monitor', img: 'https://images.unsplash.com/photo-1551651766-48f65759deb3?w=400&q=80' },
+                { name: 'Speaker', img: 'https://images.unsplash.com/photo-1545454675-3531b543be5d?w=400&q=80' }
+            ],
+            'home-appliances': [
+                { name: 'Refrigerator', img: 'https://images.unsplash.com/photo-1571175443880-49e1d58b794a?w=400&q=80' },
+                { name: 'AC', img: 'https://images.unsplash.com/photo-1601058268499-e52642da63d7?w=400&q=80' },
+                { name: 'Washing Machine', img: 'https://images.unsplash.com/photo-1626806819282-2c1dc01a5e0c?w=400&q=80' },
+                { name: 'Dish Washer', img: 'https://images.unsplash.com/photo-1581622558661-0ae130b9104e?w=400&q=80' },
+                { name: 'Air Fryer', img: 'https://images.unsplash.com/photo-1626082927389-d52d838a95d4?w=400&q=80' },
+                { name: 'Kitchen Supplies', img: 'https://images.unsplash.com/photo-1556910103-1c02745a30bf?w=400&q=80' },
+                { name: 'Air Purifier', img: 'https://images.unsplash.com/photo-1596700877914-747dff69db00?w=400&q=80' }
+            ],
+            'bags-footwear': [
+                { name: 'Womens Footwear', img: 'https://images.unsplash.com/photo-1543163521-1bf539c55dd2?w=400&q=80' },
+                { name: 'Mens Footwear', img: 'https://images.unsplash.com/photo-1449505278894-297fdb3edbc4?w=400&q=80' },
+                { name: 'Kids Footwear', img: 'https://images.unsplash.com/photo-1514989940723-e8e51635b782?w=400&q=80' },
+                { name: 'Women Bags', img: 'https://images.unsplash.com/photo-1584917865442-de89df76afd3?w=400&q=80' },
+                { name: 'Men Bags', img: 'https://images.unsplash.com/photo-1553062407-98eeb64c6a62?w=400&q=80' },
+                { name: 'Travel Bags', img: 'https://images.unsplash.com/photo-1553062407-98eeb64c6a62?w=400&q=80' }
+            ],
+            'home-decor': [
+                { name: 'Wood Furniture', img: 'https://images.unsplash.com/photo-1503602642458-23211144584b?w=400&q=80' },
+                { name: 'Kitchen Storage', img: 'https://images.unsplash.com/photo-1598207134423-93d39572c67b?w=400&q=80' },
+                { name: 'Home Textile', img: 'https://images.unsplash.com/photo-1513519245088-0e12902e5a38?w=400&q=80' },
+                { name: 'Bedroom Accessories', img: 'https://images.unsplash.com/photo-1505693416388-b0346d80ebd4?w=400&q=80' }
+            ],
+            'fitness': [
+                { name: 'Treadmill', img: 'https://images.unsplash.com/photo-1579758629938-03607ccdbaba?w=400&q=80' },
+                { name: 'Fitness Bike', img: 'https://images.unsplash.com/photo-1513593771513-6568e18b7aa9?w=400&q=80' },
+                { name: 'Walking Pods', img: 'https://images.unsplash.com/photo-1590487988256-9ed24133863e?w=400&q=80' },
+                { name: 'Weights', img: 'https://images.unsplash.com/photo-1583454110551-21f2fa2afe61?w=400&q=80' },
+                { name: 'Home Gym', img: 'https://images.unsplash.com/photo-1540497077202-7c8a3999166f?w=400&q=80' },
+                { name: 'Gym Accessories', img: 'https://images.unsplash.com/photo-1517130038641-a774d04afb3c?w=400&q=80' }
+            ],
+            'sports': [
+                { name: 'Cricket', img: 'https://images.unsplash.com/photo-1531415074984-614d82618f9c?w=400&q=80' },
+                { name: 'Football', img: 'https://images.unsplash.com/photo-1579952363873-27f3bade9f55?w=400&q=80' },
+                { name: 'Badminton', img: 'https://images.unsplash.com/photo-1626224583764-8478ab2e2ed9?w=400&q=80' },
+                { name: 'Swimming', img: 'https://images.unsplash.com/photo-1421883414326-60e70c66b7ca?w=400&q=80' },
+                { name: 'Table Tennis', img: 'https://images.unsplash.com/photo-1534158914592-062992fbe000?w=400&q=80' },
+                { name: 'Boxing', img: 'https://images.unsplash.com/photo-1583473848882-f9a5bc7fd2ee?w=400&q=80' }
+            ],
+            'kids-toddlers': [
+                { name: 'Girls Clothing', img: 'https://images.unsplash.com/photo-1621452773781-0f992fd1f5cb?w=400&q=80' },
+                { name: 'Boys Clothing', img: 'https://images.unsplash.com/photo-1519457431-44ccd64a579b?w=400&q=80' },
+                { name: 'Baby Care', img: 'https://images.unsplash.com/photo-1555252333-9f8e92e65df9?w=400&q=80' },
+                { name: 'Kids Toys', img: 'https://images.unsplash.com/photo-1566576912321-d58ddd7a6088?w=400&q=80' }
+            ],
+            'pet-supplies': [
+                { name: 'Dog Food', img: 'https://images.unsplash.com/photo-1589924691195-41432c84c161?w=400&q=80' },
+                { name: 'Cat Food', img: 'https://images.unsplash.com/photo-1514888286974-6c03e2ca1dba?w=400&q=80' },
+                { name: 'Birds', img: 'https://images.unsplash.com/photo-1444464666168-49d633b86797?w=400&q=80' },
+                { name: 'Aquarium', img: 'https://images.unsplash.com/photo-1522069169874-c58ec4b76be5?w=400&q=80' }
+            ],
+            'men': [
+                { name: 'Top Wear', img: 'https://images.unsplash.com/photo-1550246140-5119ae4790b8?w=400&q=80' },
+                { name: 'Bottom Wear', img: 'https://images.unsplash.com/photo-1504198458649-3128b932f49e?w=400&q=80' },
+                { name: 'Inner Wear', img: 'https://images.unsplash.com/photo-1513364776144-60967b0f800f?w=400&q=80' },
+                { name: 'Ethnic Wear', img: 'https://images.unsplash.com/photo-1507679799987-9755eb1e1c17?w=400&q=80' },
+                { name: 'Sports Wear', img: 'https://images.unsplash.com/photo-1518459031867-a89b944bffe4?w=400&q=80' },
+                { name: 'Winter Wear', img: 'https://images.unsplash.com/photo-1591559489278-654cb2960f25?w=400&q=80' },
+                { name: 'Accessories', img: 'https://images.unsplash.com/photo-1487222477894-8943e31ef7b2?w=400&q=80' }
+            ],
+            'women': [
+                { name: 'Top Wear', img: 'https://images.unsplash.com/photo-1434389677669-e08b4cac3105?w=400&q=80' },
+                { name: 'Bottom Wear', img: 'https://images.unsplash.com/photo-1475178626620-a4d074967329?w=400&q=80' },
+                { name: 'Inner Wear', img: 'https://images.unsplash.com/photo-1574312290483-e18985c54d3e?w=400&q=80' },
+                { name: 'Ethnic Wear', img: 'https://images.unsplash.com/photo-1627885744838-898075677d33?w=400&q=80' },
+                { name: 'Sports Wear', img: 'https://images.unsplash.com/photo-1493655161922-ef98929de9d8?w=400&q=80' },
+                { name: 'Accessories', img: 'https://images.unsplash.com/photo-1492707892479-7bc8d5a4ee93?w=400&q=80' }
+            ]
         };
 
         // --- References ---
@@ -806,11 +892,41 @@
             }, 200);
         }
 
+        // State Persistence
+        const savedCat = sessionStorage.getItem('activeCategory');
+        const savedSearch = sessionStorage.getItem('searchQuery');
+
+        // Restore Search
+        if (savedSearch) {
+            searchInput.value = savedSearch;
+        }
+
+        // Restore Category or Default
+        if (savedCat) {
+            currentCatId = savedCat;
+            renderSidebar();
+            // We need to wait for sidebar render to be sure, but it's synchronous here
+            renderSubcategories(savedCat);
+            // Highlight active in sidebar
+            document.querySelectorAll('.cat').forEach(c => {
+                c.classList.remove('active');
+                if (c.dataset.id === savedCat) c.classList.add('active');
+            });
+            if (window.innerWidth <= 860) {
+                sidebar.style.transform = 'translateX(-100%)';
+                overlay.classList.remove('active');
+            }
+        } else {
+            renderSidebar();
+            renderHome();
+        }
+
         // --- Search Logic ---
         searchInput.addEventListener('input', (e) => {
-            const query = e.target.value.toLowerCase().trim();
+            const term = e.target.value.toLowerCase().trim();
+            sessionStorage.setItem('searchQuery', term);
 
-            if (!query) {
+            if (term.length < 2) {
                 if (currentCatId) {
                     renderSubcategories(currentCatId);
                 } else {
@@ -823,15 +939,31 @@
             // Iterate all categories
             Object.keys(subcategories).forEach(catId => {
                 const subs = subcategories[catId];
-                const matches = subs.filter(s => s.toLowerCase().includes(query));
+                const matches = subs.filter(s => s.name.toLowerCase().includes(term)); // Changed s to s.name
                 if (matches.length > 0) {
                     const catLabel = categories.find(c => c.id === catId)?.label || catId;
                     matches.forEach(m => results.push({ sub: m, catId: catId, catLabel: catLabel }));
                 }
             });
 
-            renderSearchResults(results, query);
+            renderSearchResults(results, term);
         });
+
+        function filterAll(term) {
+            let html = `<h2 class="animate-in">Search Results</h2><div class="subgrid">`;
+            let count = 0;
+            Object.entries(subcategories).forEach(([catId, items]) => {
+                items.forEach(item => {
+                    if (item.name.toLowerCase().includes(term)) {
+                        html += createCard(item, catId);
+                        count++;
+                    }
+                });
+            });
+            html += `</div>`;
+            if (count === 0) html = `<div class="animate-in" style="text-align:center; margin-top:40px; color:var(--text-secondary)">No results found for "${term}"</div>`;
+            contentArea.innerHTML = html;
+        }
 
         function renderSearchResults(results, query) {
             if (results.length === 0) {
@@ -840,42 +972,25 @@
             }
 
             document.getElementById('pageTitle').textContent = `Search Results`;
-            document.getElementById('breadcrumb').textContent = `SEARCH / "${query}"`;
+            document.getElementById('breadcrumb').innerHTML = `<a href="#" onclick="renderHome(); return false;" style="color:inherit; text-decoration:none;">HOME</a> / "${query}"`;
 
-           let html = '<div class="subgrid">';
+            let html = '<div class="subgrid">';
             results.forEach((item, i) => {
                 html += `
-                <div class="card animate-in subcard" style="animation-delay: ${i * 50}ms" data-sub="${item.sub}" data-cat="${item.catId}">
-                    <div class="card-content subcard-row">
-                        
-                        <div class="sub-img">
-                            <img src="images/${item.sub}.png" alt="${item.sub}">
-                        </div>
-            
-                        <div class="sub-text">
-                            <div class="badge" style="background:var(--accent); color:white; margin-bottom:8px">
-                                ${item.catLabel}
-                            </div>
-            
-                            <div class="title">${item.sub}</div>
-                            <div class="meta">View Top Products</div>
-                        </div>
-            
+                <div class="card animate-in" style="animation-delay: ${i * 50}ms; cursor: pointer; padding: 12px; display: flex; align-items: center;" data-sub="${item.sub.name}" data-cat="${item.catId}">
+                    <div style="flex: 1; padding-right: 12px;">
+                        <div class="badge" style="background:var(--accent); color:white; margin-bottom:4px; font-size: 0.7rem; padding: 4px 8px;">${item.catLabel}</div>
+                        <div class="title" style="margin-bottom: 2px; font-size: 1.1rem;">${item.sub.name}</div>
+                        <div class="meta" style="font-size: 0.85rem;">View Top Products</div>
                     </div>
+                    <div style="width: 70px; height: 70px; background: url('${item.sub.img}') center/cover no-repeat; border-radius: 12px; flex-shrink: 0;"></div>
                 </div>`;
             });
-
             html += '</div><div id="productsHolder"></div>';
             contentArea.innerHTML = html;
 
             // Add Handlers
-            contentArea.querySelectorAll('.card').forEach(card => {
-                addTiltEffect(card);
-                card.addEventListener('click', (e) => {
-                    createRipple(e);
-                    showProducts(card.dataset.sub);
-                });
-            });
+            addCardHandlers();
         }
 
         // --- Rendering ---
@@ -900,7 +1015,11 @@
                         closeMobileMenu();
                     }
 
-                    renderSubcategories(currentCatId);
+                    if (currentCatId === 'home') {
+                        renderHome();
+                    } else {
+                        renderSubcategories(currentCatId);
+                    }
                 });
             });
         }
@@ -908,13 +1027,13 @@
         function renderSubcategories(catId, filter = '') {
             const cat = categories.find(c => c.id === catId);
             document.getElementById('pageTitle').textContent = cat.label;
-            document.getElementById('breadcrumb').textContent = `HOME / ${cat.label}`;
+            document.getElementById('breadcrumb').innerHTML = `<a href="#" onclick="renderHome(); return false;" style="color:inherit; text-decoration:none;">HOME</a> / ${cat.label}`;
 
             let subs = subcategories[catId] || [];
 
             // Filter
             if (filter) {
-                subs = subs.filter(s => s.toLowerCase().includes(filter));
+                subs = subs.filter(s => s.name.toLowerCase().includes(filter));
             }
 
             if (subs.length === 0) {
@@ -925,60 +1044,160 @@
             let html = '<div class="subgrid">';
             subs.forEach((s, i) => {
                 html += `
-                <div class="card animate-in" style="animation-delay: ${i * 50}ms" data-sub="${s}">
-                    <div class="card-content">
-                        <div class="title">${s}</div>
-                        <div class="meta">View Top Products</div>
+                <div class="card animate-in" style="animation-delay: ${i * 50}ms; cursor: pointer; padding: 12px; display: flex; align-items: center;" data-sub="${s.name}">
+                    <div style="flex: 1; padding-right: 12px;">
+                        <div class="title" style="margin-bottom: 2px; font-size: 1.1rem;">${s.name}</div>
+                        <div class="meta" style="font-size: 0.85rem;">View Top Products</div>
                     </div>
+                    <div style="width: 70px; height: 70px; background: url('${s.img}') center/cover no-repeat; border-radius: 12px; flex-shrink: 0;"></div>
                 </div>`;
             });
             html += '</div><div id="productsHolder"></div>';
             contentArea.innerHTML = html;
 
-            // Add 3D Tilt and Click handlers
+            addCardHandlers();
+        }
+
+        function renderHome() {
+            document.getElementById('pageTitle').textContent = 'Welcome';
+            document.getElementById('breadcrumb').innerHTML = `<a href="#" onclick="renderHome(); return false;" style="color:inherit; text-decoration:none;">HOME</a>`;
+            currentCatId = 'home';
+            sessionStorage.removeItem('activeCategory');
+
+            // Highlight Home in sidebar
+            document.querySelectorAll('.cat').forEach(c => {
+                c.classList.remove('active');
+                if (c.dataset.id === 'home') c.classList.add('active');
+            });
+
+            // Featured / Welcome Content
+            const html = `
+            <div class="animate-in" style="margin-bottom: 32px;">
+                <div style="background: linear-gradient(135deg, var(--mesh-1), var(--mesh-3)); border-radius: 24px; padding: 40px; color: white; position: relative; overflow: hidden; box-shadow: 0 10px 30px rgba(0,0,0,0.2);">
+                    <div style="position: relative; z-index: 2;">
+                        <h2 style="font-size: 2.5rem; margin-bottom: 12px;">Welcome to Go Royal</h2>
+                        <p style="font-size: 1.2rem; opacity: 0.9; max-width: 600px;">Experience premium shopping with our curated selection of top-rated products across all categories.</p>
+                    </div>
+                     <div style="position: absolute; right: -50px; bottom: -50px; width: 200px; height: 200px; background: rgba(255,255,255,0.2); border-radius: 50%; filter: blur(40px);"></div>
+                </div>
+            </div>
+
+            <h3 class="animate-in" style="margin-bottom: 24px;">Top Categories</h3>
+            <div class="subgrid">
+                ${['electronics', 'watches', 'home-decor', 'automobiles'].map((catId, i) => {
+                const cat = categories.find(c => c.id === catId);
+                // Use a representative image from subcategories
+                const img = subcategories[catId][0]?.img || '';
+                return `
+                    <div class="card animate-in" style="animation-delay: ${i * 100}ms; cursor: pointer;" onclick="document.querySelector('.cat[data-id=${catId}]').click()">
+                        <div class="card-content">
+                             <div style="display:flex; justify-content:space-between; align-items:flex-start; margin-bottom:16px;">
+                                <div style="background:var(--accent); color:white; width:40px; height:40px; border-radius:12px; display:flex; align-items:center; justify-content:center; font-size:1.2rem;">
+                                    <i class="${cat.icon}"></i>
+                                </div>
+                                <i class="ri-arrow-right-up-line" style="color:var(--text-secondary)"></i>
+                             </div>
+                             <div class="title">${cat.label}</div>
+                             <div class="meta">${subcategories[catId].length} Subcategories</div>
+                        </div>
+                    </div>
+                    `;
+            }).join('')}
+            </div>
+            `;
+            contentArea.innerHTML = html;
+        }
+
+        function addCardHandlers() {
             contentArea.querySelectorAll('.card').forEach(card => {
                 addTiltEffect(card);
                 card.addEventListener('click', (e) => {
                     createRipple(e);
-                    showProducts(card.dataset.sub);
+
+                    // Add press effect
+                    card.style.transition = 'transform 0.1s cubic-bezier(0.4, 0, 0.2, 1)';
+                    card.style.transform = 'scale(0.95)';
+
+                    setTimeout(() => {
+                        card.style.transform = 'scale(1)';
+                    }, 100);
+
+                    // Delay redirection slightly to show effect
+                    setTimeout(() => {
+                        showProducts(card.dataset.sub);
+                    }, 300);
                 });
             });
         }
 
         function showProducts(sub) {
-            const holder = document.getElementById('productsHolder');
-
-            // Logic: Show exactly 2 products: Sponsored & Top Rated
-            const products = [
-                { type: 'sponsored', label: 'Sponsored', name: `${sub} - Premium Choice`, price: '₹' + (Math.random() * 5000 + 2000).toFixed(0) },
-                { type: 'top-rated', label: 'Top Rated Product', name: `${sub} - Best Seller`, price: '₹' + (Math.random() * 3000 + 1000).toFixed(0) }
-            ];
-
-            let html = `<h2 class="animate-in" style="margin-top:40px; margin-bottom: 20px;">${sub}</h2><div class="products">`;
-            products.forEach((p, i) => {
-                html += `
-                <div class="card animate-in" style="animation-delay: ${i * 80}ms">
-                    <div class="card-content">
-                        <div class="badge ${p.type}">${p.label}</div>
-                        <div style="height:180px; background:rgba(0,0,0,0.1); border-radius:12px; margin-bottom:12px; display:flex; align-items:center; justify-content:center;">
-                           <i class="ri-shopping-bag-3-line" style="font-size:4rem; opacity:0.5"></i>
-                        </div>
-                        <div class="title" style="font-size:1.4rem">${p.name}</div>
-                        <div style="color:var(--accent); font-weight:bold; font-size:1.2rem">${p.price}</div>
-                        <div class="meta" style="margin-top:8px">★★★★★ (4.9)</div>
-                    </div>
-                </div>`;
+            // Find image for this subcategory
+            let subImg = '';
+            // Search all cats to find the sub img
+            Object.values(subcategories).forEach(list => {
+                const found = list.find(s => s.name === sub);
+                if (found) subImg = found.img;
             });
-            html += '</div>';
-            holder.innerHTML = html;
-            holder.scrollIntoView({ behavior: 'smooth', block: 'start' });
 
-            holder.querySelectorAll('.card').forEach(c => {
-                addTiltEffect(c);
-            });
+            // Redirect to fresh page
+            window.location.href = `product.html?sub=${encodeURIComponent(sub)}&img=${encodeURIComponent(subImg)}`;
         }
 
+        // --- Interactivity ---
+        function addToCart(name) {
+            // Show toast
+            const toast = document.createElement('div');
+            toast.className = 'toast animate-in';
+            toast.innerHTML = `<i class="ri-checkbox-circle-fill" style="color:#4ade80; margin-right:8px; font-size:1.2rem"></i> <span style="font-weight:500">${name}</span> added in cart`;
+
+            Object.assign(toast.style, {
+                position: 'fixed', bottom: '80px', left: '50%', transform: 'translateX(-50%)',
+                background: 'var(--card-bg)', padding: '12px 24px', borderRadius: '50px',
+                border: 'var(--glass-border)', backdropFilter: 'blur(16px)', webkitBackdropFilter: 'blur(16px)',
+                boxShadow: '0 10px 30px rgba(0,0,0,0.3)', zIndex: '2000',
+                display: 'flex', alignItems: 'center', pointerEvents: 'none',
+                color: 'var(--text-primary)', whiteSpace: 'nowrap', fontSize: '0.9rem'
+            });
+
+            document.body.appendChild(toast);
+
+            // Haptic feedback if available
+            if (navigator.vibrate) navigator.vibrate(50);
+
+            setTimeout(() => {
+                toast.style.transition = 'all 0.3s ease';
+                toast.style.opacity = '0';
+                toast.style.transform = 'translate(-50%, 20px)';
+                setTimeout(() => toast.remove(), 300);
+            }, 2000);
+        }
+
+        // Bottom Nav Logic
+        document.querySelectorAll('.bottom-nav .nav-item').forEach(item => {
+            item.addEventListener('click', () => {
+                document.querySelectorAll('.bottom-nav .nav-item').forEach(x => x.classList.remove('active'));
+                item.classList.add('active');
+
+                // Simple routing simulation
+                const text = item.querySelector('span').textContent;
+                if (text === 'Home') {
+                    renderHome();
+                }
+            });
+        });
+
         // --- Effects ---
+        // Global Proximity Spotlight
+        document.addEventListener('mousemove', (e) => {
+            document.querySelectorAll('.card').forEach(card => {
+                const rect = card.getBoundingClientRect();
+                const x = e.clientX - rect.left;
+                const y = e.clientY - rect.top;
+                card.style.setProperty('--mouse-x', `${x}px`);
+                card.style.setProperty('--mouse-y', `${y}px`);
+            });
+        });
+
         // 3D Tilt
         function addTiltEffect(card) {
             card.addEventListener('mousemove', (e) => {
@@ -1021,6 +1240,5 @@
         }
     </script>
 </body>
-
 
 </html>

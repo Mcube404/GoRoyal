@@ -1,0 +1,401 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Go Royal - Products</title>
+    <style>
+        /* Reusing Core Styles from Index */
+        :root {
+            /* Dark Theme (Default) */
+            --bg-gradient: linear-gradient(135deg, #0f172a 0%, #020617 100%);
+            --sidebar-bg: rgba(15, 23, 42, 0.6);
+            --card-bg: rgba(30, 41, 59, 0.4);
+            --text-primary: #f8fafc;
+            --text-secondary: #94a3b8;
+            --accent: #8b5cf6;
+            --accent-glow: rgba(139, 92, 246, 0.5);
+            --border-color: rgba(255, 255, 255, 0.08);
+            --glass-border: 1px solid rgba(255, 255, 255, 0.05);
+            --hover-bg: rgba(255, 255, 255, 0.05);
+            --shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.37);
+            --bg-color: #0f172a;
+        }
+
+        [data-theme="light"] {
+            --bg-gradient: linear-gradient(135deg, #f0f9ff 0%, #e0f2fe 100%);
+            --sidebar-bg: rgba(255, 255, 255, 0.6);
+            --card-bg: rgba(255, 255, 255, 0.5);
+            --text-primary: #0f172a;
+            --text-secondary: #475569;
+            --accent: #3b82f6;
+            --accent-glow: rgba(59, 130, 246, 0.4);
+            --border-color: rgba(0, 0, 0, 0.05);
+            --glass-border: 1px solid rgba(255, 255, 255, 0.4);
+            --hover-bg: rgba(0, 0, 0, 0.03);
+            --shadow: 0 8px 32px 0 rgba(31, 38, 135, 0.1);
+            --bg-color: #f0f9ff;
+        }
+
+        * {
+            box-sizing: border-box;
+            transition: background-color 0.3s ease, color 0.3s ease, border-color 0.3s ease, box-shadow 0.3s ease;
+        }
+
+        html,
+        body {
+            height: 100%;
+            margin: 0;
+            font-family: 'Outfit', 'Inter', system-ui, sans-serif;
+            background: var(--bg-gradient);
+            color: var(--text-primary);
+            overflow-x: hidden;
+        }
+
+        .app {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 24px;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+        }
+
+        /* Glass Header */
+        .header {
+            background: var(--sidebar-bg);
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
+            border: var(--glass-border);
+            box-shadow: var(--shadow);
+            padding: 16px 24px;
+            border-radius: 24px;
+            display: flex;
+            align-items: center;
+            gap: 16px;
+            margin-bottom: 32px;
+            justify-content: space-between;
+        }
+
+        .back-btn {
+            background: var(--hover-bg);
+            border: var(--glass-border);
+            color: var(--text-primary);
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            font-size: 1.2rem;
+            transition: all 0.3s;
+            text-decoration: none;
+        }
+
+        .back-btn:hover {
+            background: var(--accent);
+            color: white;
+            transform: translateX(-4px);
+        }
+
+        h1 {
+            margin: 0;
+            font-size: 1.8rem;
+            background: linear-gradient(to right, var(--text-primary), var(--accent));
+            background-clip: text;
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        /* Product Grid */
+        .products {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 24px;
+        }
+
+        .card {
+            background: var(--card-bg);
+            border: var(--glass-border);
+            padding: 24px;
+            border-radius: 20px;
+            cursor: pointer;
+            position: relative;
+            overflow: hidden;
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+        }
+
+        .card:hover {
+            transform: translateY(-8px);
+            box-shadow: 0 20px 40px -5px rgba(0, 0, 0, 0.2);
+        }
+
+        .badge {
+            display: inline-block;
+            padding: 6px 12px;
+            border-radius: 20px;
+            font-size: 0.75rem;
+            font-weight: 600;
+            text-transform: uppercase;
+            margin-bottom: 12px;
+            letter-spacing: 0.5px;
+        }
+
+        .badge.sponsored {
+            background: rgba(255, 215, 0, 0.15);
+            color: #ffd700;
+            border: 1px solid rgba(255, 215, 0, 0.3);
+        }
+
+        .badge.top-rated {
+            background: rgba(74, 222, 128, 0.15);
+            color: #4ade80;
+            border: 1px solid rgba(74, 222, 128, 0.3);
+        }
+
+        /* Animations */
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .animate-in {
+            animation: fadeInUp 0.5s ease forwards;
+            opacity: 0;
+        }
+
+        /* Bg Mesh (Simplified) */
+        .bg-mesh {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: -1;
+            overflow: hidden;
+            pointer-events: none;
+        }
+
+        .blob {
+            position: absolute;
+            border-radius: 50%;
+            filter: blur(80px);
+            opacity: 0.4;
+            animation: float 10s infinite ease-in-out;
+        }
+
+        .blob-1 {
+            top: -10%;
+            left: -10%;
+            width: 50vw;
+            height: 50vw;
+            background: var(--accent);
+        }
+
+        .blob-2 {
+            bottom: -10%;
+            right: -10%;
+            width: 40vw;
+            height: 40vw;
+            background: #3b82f6;
+            animation-delay: -5s;
+        }
+
+        @keyframes float {
+
+            0%,
+            100% {
+                transform: translate(0, 0);
+            }
+
+            50% {
+                transform: translate(30px, 50px);
+            }
+        }
+
+        /* Mobile Optimization */
+        @media (max-width: 800px) {
+
+            html,
+            body {
+                overflow: hidden;
+                /* Prevent page scroll */
+            }
+
+            .app {
+                padding: 16px;
+                height: 100vh;
+                overflow: hidden;
+            }
+
+            .header {
+                padding: 12px 16px;
+                margin-bottom: 16px;
+                /* Reduced margin */
+                border-radius: 16px;
+                flex-shrink: 0;
+            }
+
+            /* Compact Grid */
+            .products {
+                grid-template-columns: 1fr 1fr;
+                /* 2 Columns */
+                gap: 12px;
+                overflow-y: auto;
+                /* Internal scroll if needed */
+                padding-bottom: 80px;
+                /* Space for potential bottom elements */
+                align-content: start;
+            }
+
+            .card {
+                padding: 12px;
+            }
+
+            /* Compact Product Image */
+            .card .card-content>div[style*="height:280px"] {
+                height: 140px !important;
+                /* Force smaller height */
+                margin-bottom: 8px !important;
+            }
+
+            .card .title {
+                font-size: 1rem !important;
+                margin-bottom: 2px !important;
+            }
+
+            .card div[style*="font-size:1.3rem"] {
+                font-size: 1.1rem !important;
+            }
+
+            .badge {
+                padding: 4px 8px;
+                font-size: 0.65rem;
+                margin-bottom: 8px;
+            }
+
+            .meta {
+                font-size: 0.75rem !important;
+            }
+        }
+    </style>
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;700;900&display=swap" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/remixicon@3.5.0/fonts/remixicon.css" rel="stylesheet">
+</head>
+
+<body>
+    <div class="bg-mesh">
+        <div class="blob blob-1"></div>
+        <div class="blob blob-2"></div>
+    </div>
+
+    <div class="app">
+        <header class="header animate-in">
+            <a href="javascript:goBack()" class="back-btn"><i class="ri-arrow-left-line"></i></a>
+            <div style="display: flex; align-items: center; gap: 12px;">
+                <a href="index.html" style="text-decoration:none; display:flex; align-items:center;">
+                    <img src="assets/logo.png" alt="Go Royal" style="height: 60px;">
+                </a>
+                <h1 id="pageTitle">Products</h1>
+            </div>
+            <div style="width:40px"></div> <!-- Spacer for balance -->
+        </header>
+
+        <main id="productsHolder" class="products">
+            <!-- Products injected here -->
+        </main>
+    </div>
+
+    <script>
+        // --- Init Theme ---
+        const savedTheme = localStorage.getItem('theme') || 'dark';
+        document.documentElement.setAttribute('data-theme', savedTheme);
+
+        // --- Logic ---
+        const urlParams = new URLSearchParams(window.location.search);
+        const sub = urlParams.get('sub');
+        // We accept the image URL as a param too for simplicity, or re-use the map if we duplicated data.
+        // For robustness, let's re-use the logic to find the image from the map, but since we don't want to duplicate the huge object, 
+        // we can pass the image url in query param or just use a generic one if missing. 
+        // BETTER: Pass the image URL in the query string from index.html to avoid code duplication!
+        const img = urlParams.get('img') || '';
+
+        if (!sub) {
+            window.location.href = 'index.html';
+        }
+
+        document.getElementById('pageTitle').textContent = sub;
+        document.title = `${sub} - Go Royal`;
+
+        renderProducts(sub, img);
+
+        function renderProducts(sub, subImg) {
+            const holder = document.getElementById('productsHolder');
+
+            // Logic: Show exactly 2 products: Sponsored & Top Rated
+            const products = [
+                { type: 'sponsored', label: 'Sponsored', name: `${sub} - Premium Choice`, price: '₹' + (Math.random() * 5000 + 2000).toFixed(0) },
+                { type: 'top-rated', label: 'Top Rated Product', name: `${sub} - Best Seller`, price: '₹' + (Math.random() * 3000 + 1000).toFixed(0) }
+            ];
+
+            let html = '';
+            products.forEach((p, i) => {
+                html += `
+                <div class="card animate-in" style="animation-delay: ${i * 100}ms; cursor: pointer;" onclick="addToCart('${p.name.replace(/'/g, "\\'")}')">
+                    <div class="card-content">
+                        <div class="badge ${p.type}">${p.label}</div>
+                        <div style="height:280px; background: url('${subImg}') center/cover no-repeat; border-radius:16px; margin-bottom:16px;"></div>
+                        <div class="title" style="font-size:1.5rem; margin-bottom: 4px; font-weight:700">${p.name}</div>
+                        <div style="color:var(--accent); font-weight:bold; font-size:1.3rem">${p.price}</div>
+                        <div class="meta" style="margin-top:8px; color:var(--text-secondary)">★★★★★ (4.9) • Free Delivery</div>
+                    </div>
+                </div>`;
+            });
+            holder.innerHTML = html;
+        }
+
+        function addToCart(name) {
+            // Show toast
+            const toast = document.createElement('div');
+            toast.className = 'toast animate-in';
+            toast.innerHTML = `<i class="ri-checkbox-circle-fill" style="color:#4ade80; margin-right:8px; font-size:1.2rem"></i> <span style="font-weight:500">${name}</span> added in cart`;
+
+            Object.assign(toast.style, {
+                position: 'fixed', bottom: '24px', left: '50%', transform: 'translateX(-50%)',
+                background: 'var(--card-bg)', padding: '12px 24px', borderRadius: '50px',
+                border: 'var(--glass-border)', backdropFilter: 'blur(16px)', webkitBackdropFilter: 'blur(16px)',
+                boxShadow: '0 10px 30px rgba(0,0,0,0.3)', zIndex: '2000',
+                display: 'flex', alignItems: 'center', pointerEvents: 'none',
+                color: 'var(--text-primary)', whiteSpace: 'nowrap', fontSize: '0.9rem'
+            });
+
+            document.body.appendChild(toast);
+            if (navigator.vibrate) navigator.vibrate(50);
+
+            setTimeout(() => {
+                toast.style.opacity = '0';
+                toast.style.transform = 'translate(-50%, 20px)';
+                setTimeout(() => toast.remove(), 300);
+            }, 2000);
+        }
+
+        function goBack() {
+            if (document.referrer.includes('index.html')) {
+                history.back();
+            } else {
+                window.location.href = 'index.html';
+            }
+        }
+    </script>
+</body>
+
+</html>
