@@ -633,6 +633,36 @@
                 font-size: 1rem;
             }
         }
+        .subcard-row {
+            display: flex;
+            align-items: center;
+            gap: 20px;
+        }
+        
+        .sub-img {
+            width: 90px;
+            height: 90px;
+            border-radius: 16px;
+            background: rgba(255,255,255,0.05);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            overflow: hidden;
+            flex-shrink: 0;
+            border: 1px solid rgba(255,255,255,0.08);
+        }
+        
+        .sub-img img {
+            width: 80%;
+            height: 80%;
+            object-fit: contain;
+            filter: drop-shadow(0 0 8px var(--accent));
+        }
+        
+        .sub-text .title {
+            font-size: 1.4rem;
+            font-weight: 800;
+        }
 
         @media (max-width: 480px) {
             .subgrid {
@@ -812,17 +842,29 @@
             document.getElementById('pageTitle').textContent = `Search Results`;
             document.getElementById('breadcrumb').textContent = `SEARCH / "${query}"`;
 
-            let html = '<div class="subgrid">';
+           let html = '<div class="subgrid">';
             results.forEach((item, i) => {
                 html += `
-                <div class="card animate-in" style="animation-delay: ${i * 50}ms" data-sub="${item.sub}" data-cat="${item.catId}">
-                    <div class="card-content">
-                        <div class="badge" style="background:var(--accent); color:white; margin-bottom:8px">${item.catLabel}</div>
-                        <div class="title">${item.sub}</div>
-                        <div class="meta">View Top Products</div>
+                <div class="card animate-in subcard" style="animation-delay: ${i * 50}ms" data-sub="${item.sub}" data-cat="${item.catId}">
+                    <div class="card-content subcard-row">
+                        
+                        <div class="sub-img">
+                            <img src="images/${item.sub}.png" alt="${item.sub}">
+                        </div>
+            
+                        <div class="sub-text">
+                            <div class="badge" style="background:var(--accent); color:white; margin-bottom:8px">
+                                ${item.catLabel}
+                            </div>
+            
+                            <div class="title">${item.sub}</div>
+                            <div class="meta">View Top Products</div>
+                        </div>
+            
                     </div>
                 </div>`;
             });
+
             html += '</div><div id="productsHolder"></div>';
             contentArea.innerHTML = html;
 
@@ -979,5 +1021,6 @@
         }
     </script>
 </body>
+
 
 </html>
