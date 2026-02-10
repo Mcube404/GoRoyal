@@ -5,7 +5,641 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width,initial-scale=1" />
     <title>Go Royal - Premium Shopping</title>
-    <link rel="stylesheet" href="style.css">
+    <style>
+        /* 
+      Advanced Theme Definitions 
+    */
+        :root {
+            --cursor-size: 20px;
+        }
+
+        /* Cyberpunk Midnight Theme (Dark) */
+        [data-theme="dark"] {
+            --bg-color: #050510;
+            --bg-gradient: radial-gradient(circle at 50% 50%, #1a0b2e 0%, #050510 100%);
+            --mesh-1: #ff0055;
+            --mesh-2: #00ff9d;
+            --mesh-3: #7000ff;
+
+            --sidebar-bg: rgba(20, 20, 40, 0.4);
+            --card-bg: rgba(30, 30, 60, 0.3);
+            --glass-border: 1px solid rgba(255, 255, 255, 0.1);
+
+            --text-primary: #ffffff;
+            --text-secondary: #a0a0c0;
+
+            --accent: #00ff9d;
+            --accent-glow: rgba(0, 255, 157, 0.6);
+
+            --shadow: 0 10px 40px -10px rgba(0, 0, 0, 0.5);
+        }
+
+        /* Vibrant Pastel Theme (Light) */
+        [data-theme="light"] {
+            --bg-color: #f8f9ff;
+            --bg-gradient: radial-gradient(circle at 50% 50%, #ffffff 0%, #f0f4ff 100%);
+            --mesh-1: #ff9a9e;
+            --mesh-2: #fad0c4;
+            --mesh-3: #a18cd1;
+
+            --sidebar-bg: rgba(255, 255, 255, 0.5);
+            --card-bg: rgba(255, 255, 255, 0.6);
+            --glass-border: 1px solid rgba(255, 255, 255, 0.6);
+
+            --text-primary: #2d3436;
+            --text-secondary: #636e72;
+
+            --accent: #6c5ce7;
+            --accent-glow: rgba(108, 92, 231, 0.4);
+
+            --shadow: 0 10px 40px -10px rgba(100, 100, 200, 0.15);
+        }
+
+        * {
+            box-sizing: border-box;
+        }
+
+        html,
+        body {
+            height: 100%;
+            margin: 0;
+            font-family: 'Outfit', sans-serif;
+            background-color: var(--bg-color);
+            color: var(--text-primary);
+            overflow: hidden;
+            transition: background-color 0.5s ease;
+        }
+
+        /* Animated Background Mesh */
+        .bg-mesh {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100vw;
+            height: 100vh;
+            z-index: -1;
+            background: var(--bg-gradient);
+            overflow: hidden;
+        }
+
+        .blob {
+            position: absolute;
+            border-radius: 50%;
+            filter: blur(80px);
+            opacity: 0.6;
+            animation: float 20s infinite alternate;
+        }
+
+        .blob-1 {
+            top: -10%;
+            left: -10%;
+            width: 50vw;
+            height: 50vw;
+            background: var(--mesh-1);
+            animation-delay: 0s;
+        }
+
+        .blob-2 {
+            bottom: -10%;
+            right: -10%;
+            width: 40vw;
+            height: 40vw;
+            background: var(--mesh-2);
+            animation-delay: -5s;
+        }
+
+        .blob-3 {
+            top: 40%;
+            left: 40%;
+            width: 30vw;
+            height: 30vw;
+            background: var(--mesh-3);
+            animation-delay: -10s;
+        }
+
+        @keyframes float {
+            0% {
+                transform: translate(0, 0) scale(1);
+            }
+
+            100% {
+                transform: translate(30px, 50px) scale(1.1);
+            }
+        }
+
+        /* Layout */
+        .app {
+            display: flex;
+            height: 100vh;
+            gap: 24px;
+            padding: 24px;
+            position: relative;
+            z-index: 1;
+        }
+
+        /* Glass Panels */
+        .glass {
+            background: var(--sidebar-bg);
+            backdrop-filter: blur(16px);
+            -webkit-backdrop-filter: blur(16px);
+            border: var(--glass-border);
+            box-shadow: var(--shadow);
+        }
+
+        .sidebar {
+            width: 300px;
+            border-radius: 24px;
+            padding: 24px;
+            overflow-y: auto;
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+            flex-shrink: 0;
+            transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            z-index: 100;
+        }
+
+        .sidebar::-webkit-scrollbar {
+            width: 6px;
+        }
+
+        .sidebar::-webkit-scrollbar-thumb {
+            background: var(--glass-border);
+            border-radius: 10px;
+        }
+
+        .content {
+            flex: 1;
+            border-radius: 24px;
+            padding: 40px;
+            overflow-y: auto;
+            position: relative;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .content::-webkit-scrollbar {
+            width: 8px;
+        }
+
+        .content::-webkit-scrollbar-thumb {
+            background: var(--glass-border);
+            border-radius: 10px;
+        }
+
+        /* Logo */
+        .logo {
+            font-size: 1.8rem;
+            font-weight: 900;
+            background: linear-gradient(135deg, #ffd700, #ff8c00);
+            background-clip: text;
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            margin-bottom: 24px;
+            padding: 0 8px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            letter-spacing: -0.5px;
+        }
+
+        .logo i {
+            font-size: 1.5rem;
+            color: #ffd700;
+            -webkit-text-fill-color: #ffd700;
+        }
+
+        /* Categories */
+        .cat {
+            padding: 16px 20px;
+            border-radius: 16px;
+            display: flex;
+            align-items: center;
+            gap: 16px;
+            color: var(--text-secondary);
+            font-weight: 500;
+            transition: all 0.3s ease;
+            position: relative;
+            overflow: hidden;
+            cursor: pointer;
+        }
+
+        .cat::after {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.1), transparent);
+            transform: translateX(-100%);
+            transition: 0.5s;
+        }
+
+        .cat:hover {
+            background: rgba(255, 255, 255, 0.05);
+            color: var(--text-primary);
+            transform: padding-left 0.3s;
+            padding-left: 28px;
+        }
+
+        .cat:hover::after {
+            transform: translateX(100%);
+        }
+
+        .cat.active {
+            background: var(--accent);
+            color: #000;
+            font-weight: 700;
+            box-shadow: 0 0 20px var(--accent-glow);
+        }
+
+        [data-theme="light"] .cat.active {
+            color: white;
+        }
+
+        /* Theme Toggle Button */
+        .theme-toggle {
+            background: var(--card-bg);
+            border: var(--glass-border);
+            color: var(--text-primary);
+            width: 50px;
+            height: 50px;
+            /* Smaller for mobile fit */
+            flex-shrink: 0;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.4rem;
+            transition: all 0.5s cubic-bezier(0.68, -0.55, 0.27, 1.55);
+            cursor: pointer;
+        }
+
+        .theme-toggle:hover {
+            transform: rotate(180deg) scale(1.1);
+            box-shadow: 0 0 25px var(--accent-glow);
+            background: var(--hover-bg);
+        }
+
+        /* Search Bar */
+        .search-container {
+            flex: 1;
+            margin: 0 24px;
+            position: relative;
+        }
+
+        .search-input {
+            width: 100%;
+            background: var(--card-bg);
+            border: var(--glass-border);
+            padding: 16px 24px;
+            border-radius: 30px;
+            color: var(--text-primary);
+            font-family: 'Outfit', sans-serif;
+            font-size: 1rem;
+            outline: none;
+            transition: all 0.3s ease;
+            backdrop-filter: blur(10px);
+        }
+
+        .search-input:focus {
+            box-shadow: 0 0 20px var(--accent-glow);
+            border-color: var(--accent);
+        }
+
+        .search-input::placeholder {
+            color: var(--text-secondary);
+        }
+
+        /* 3D Cards */
+        .card {
+            background: var(--card-bg);
+            border: var(--glass-border);
+            padding: 24px;
+            border-radius: 24px;
+            position: relative;
+            transform-style: preserve-3d;
+            transform: perspective(1000px);
+            transition: transform 0.1s;
+            cursor: pointer;
+        }
+
+        .card-content {
+            transform: translateZ(20px);
+        }
+
+        .card .title {
+            font-size: 1.3rem;
+            font-weight: 800;
+            margin-bottom: 8px;
+        }
+
+        .card .meta {
+            font-size: 0.9rem;
+            color: var(--text-secondary);
+        }
+
+        .subgrid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+            gap: 24px;
+            margin-top: 32px;
+        }
+
+        .products {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            /* Larger cards for products */
+            gap: 32px;
+            margin-top: 32px;
+        }
+
+        /* Badges */
+        .badge {
+            display: inline-block;
+            padding: 6px 12px;
+            border-radius: 20px;
+            font-size: 0.75rem;
+            font-weight: 800;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            margin-bottom: 12px;
+        }
+
+        .badge.sponsored {
+            background: linear-gradient(135deg, #FFD700, #FFA500);
+            color: #000;
+        }
+
+        .badge.top-rated {
+            background: linear-gradient(135deg, var(--accent), #7000ff);
+            color: white;
+        }
+
+        /* Animations */
+        .animate-in {
+            opacity: 0;
+            animation: fadeUp 0.6s cubic-bezier(0.2, 0.8, 0.2, 1) forwards;
+        }
+
+        @keyframes fadeUp {
+            from {
+                opacity: 0;
+                transform: translateY(30px);
+            }
+
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        /* Ripple Effect */
+        .ripple {
+            position: absolute;
+            border-radius: 50%;
+            background: rgba(255, 255, 255, 0.4);
+            transform: scale(0);
+            animation: ripple 0.6s linear;
+            pointer-events: none;
+        }
+
+        @keyframes ripple {
+            to {
+                transform: scale(4);
+                opacity: 0;
+            }
+        }
+
+        /* Menu Toggle (Mobile) */
+        .menu-toggle {
+            display: none;
+            /* Desktop default */
+            background: transparent;
+            border: none;
+            color: var(--text-primary);
+            font-size: 1.8rem;
+            cursor: pointer;
+            padding: 8px;
+            margin-right: 12px;
+        }
+
+        /* Overlay */
+        .overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.5);
+            z-index: 90;
+            /* Below sidebar, above content */
+            opacity: 0;
+            pointer-events: none;
+            transition: opacity 0.3s ease;
+        }
+
+        .overlay.active {
+            opacity: 1;
+            pointer-events: auto;
+        }
+
+        /* Bottom Nav (Hidden on Desktop) */
+        .bottom-nav {
+            display: none;
+            position: fixed;
+            bottom: 0;
+            left: 0;
+            width: 100%;
+            height: 60px;
+            background: var(--card-bg);
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
+            border-top: var(--glass-border);
+            z-index: 1000;
+            justify-content: space-around;
+            align-items: center;
+            box-shadow: 0 -5px 20px rgba(0, 0, 0, 0.2);
+        }
+
+        .nav-item {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 4px;
+            font-size: 0.75rem;
+            color: var(--text-secondary);
+            cursor: pointer;
+            padding: 8px;
+            transition: color 0.3s;
+        }
+
+        .nav-item.active {
+            color: var(--accent);
+        }
+
+        .nav-item i {
+            font-size: 1.4rem;
+        }
+
+        /* Responsive - Mobile Split View */
+        @media (max-width: 860px) {
+            .app {
+                padding: 0;
+                height: calc(100vh - 60px);
+                /* Space for bottom nav */
+                flex-direction: row;
+                /* Split view */
+                gap: 0;
+                overflow: hidden;
+            }
+
+            /* Fixed Left Sidebar */
+            .sidebar {
+                position: relative;
+                width: 80px;
+                height: 100%;
+                transform: none;
+                border-radius: 0;
+                background: var(--card-bg);
+                /* Use card bg for contrast */
+                border-right: var(--glass-border);
+                padding: 10px 4px;
+                z-index: 10;
+                box-shadow: none;
+                max-height: none;
+                flex-shrink: 0;
+            }
+
+            .sidebar::-webkit-scrollbar {
+                display: none;
+            }
+
+            /* Mobile Category Items */
+            .cat {
+                flex-direction: column;
+                text-align: center;
+                padding: 12px 2px;
+                gap: 4px;
+                font-size: 0.65rem;
+                border-radius: 0;
+                margin-bottom: 0;
+                justify-content: center;
+                border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+            }
+
+            [data-theme="light"] .cat {
+                border-bottom: 1px solid rgba(0, 0, 0, 0.05);
+            }
+
+            .cat i {
+                font-size: 1.5rem;
+                margin: 0;
+                margin-bottom: 4px;
+            }
+
+            /* Remove Hover Slide on Mobile */
+            .cat:hover {
+                padding-left: 2px;
+                background: transparent;
+                color: var(--text-primary);
+            }
+
+            .cat::after {
+                display: none;
+            }
+
+            /* Active State High Contrast (Amazon Style) */
+            .cat.active {
+                background: var(--bg-color);
+                /* Matches main content bg */
+                color: var(--accent);
+                border-left: 3px solid var(--accent);
+                font-weight: 700;
+                box-shadow: none;
+            }
+
+            /* Logo Hidden in Sidebar */
+            .sidebar .logo {
+                display: none;
+            }
+
+            /* Right Content Area */
+            .content {
+                flex: 1;
+                padding: 16px;
+                border-radius: 0;
+                height: 100%;
+                background: var(--bg-color);
+            }
+
+            .header-row {
+                padding-bottom: 12px;
+                margin-bottom: 16px;
+                border-bottom: var(--glass-border);
+                flex-wrap: wrap;
+                gap: 12px;
+            }
+
+            /* Move Search to Top (Order 1) */
+            .search-container {
+                order: 1;
+                width: 100%;
+                margin: 0 0 12px 0;
+            }
+
+            .header-row>div:first-child {
+                order: 2;
+                display: flex;
+                width: 100%;
+                justify-content: space-between;
+                align-items: center;
+            }
+
+            /* Adjust Page Title */
+            .header-row #pageTitle {
+                font-size: 1.6rem !important;
+            }
+
+            .menu-toggle {
+                display: none !important;
+            }
+
+            /* Bottom Nav Visible */
+            .bottom-nav {
+                display: flex;
+            }
+
+            /* Grid adjustments */
+            .subgrid {
+                grid-template-columns: repeat(2, 1fr);
+                gap: 10px;
+                margin-top: 16px;
+            }
+
+            .products {
+                grid-template-columns: 1fr;
+                margin-top: 16px;
+            }
+
+            /* Cards Compact */
+            .card {
+                padding: 16px;
+                border-radius: 16px;
+            }
+
+            .card .title {
+                font-size: 1rem;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .subgrid {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
     <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;700;900&display=swap" rel="stylesheet">
     <link href="https://cdn.jsdelivr.net/npm/remixicon@3.5.0/fonts/remixicon.css" rel="stylesheet">
 </head>
@@ -18,8 +652,11 @@
         <div class="blob blob-3"></div>
     </div>
 
+    <!-- Overlay -->
+    <div class="overlay" id="overlay"></div>
+
     <div class="app">
-        <aside class="sidebar glass">
+        <aside class="sidebar glass" id="sidebar">
             <div class="logo">
                 <i class="ri-vip-crown-fill"></i> Go Royal
             </div>
@@ -28,13 +665,16 @@
 
         <main class="content glass">
             <div class="header-row" style="display:flex; justify-content:space-between; align-items:center;">
-                <div>
-                    <div class="breadcrumb" id="breadcrumb"
-                        style="color:var(--text-secondary); text-transform:uppercase; letter-spacing:1px; font-size:0.8rem; margin-bottom:4px;">
-                        Home</div>
-                    <h1 id="pageTitle"
-                        style="font-size:3rem; margin:0; line-height:1; background: linear-gradient(to right, var(--text-primary), var(--accent)); background-clip: text; -webkit-background-clip: text; -webkit-text-fill-color: transparent;">
-                        Welcome</h1>
+                <div style="display:flex; align-items:center;">
+                    <button class="menu-toggle" id="menuToggle"><i class="ri-menu-2-line"></i></button>
+                    <div>
+                        <div class="breadcrumb" id="breadcrumb"
+                            style="color:var(--text-secondary); text-transform:uppercase; letter-spacing:1px; font-size:0.8rem; margin-bottom:4px;">
+                            Home</div>
+                        <h1 id="pageTitle"
+                            style="font-size:3rem; margin:0; line-height:1; background: linear-gradient(to right, var(--text-primary), var(--accent)); background-clip: text; -webkit-background-clip: text; -webkit-text-fill-color: transparent;">
+                            Welcome</h1>
+                    </div>
                 </div>
 
                 <div class="search-container">
@@ -47,7 +687,297 @@
         </main>
     </div>
 
-    <script src="script.js"></script>
+    <script>
+        // --- Data ---
+        const categories = [
+            { id: 'automobiles', label: 'AUTOMOBILES', icon: 'ri-motorbike-line' },
+            { id: 'watches', label: 'WATCHES', icon: 'ri-time-line' },
+            { id: 'electronics', label: 'ELECTRONICS', icon: 'ri-macbook-line' },
+            { id: 'home-appliances', label: 'HOME APPLIANCES', icon: 'ri-fridge-line' },
+            { id: 'bags-footwear', label: 'BAGS and FOOTWEAR', icon: 'ri-handbag-line' },
+            { id: 'home-decor', label: 'HOME DECOR', icon: 'ri-home-smile-line' },
+            { id: 'fitness', label: 'FITNESS', icon: 'ri-run-line' },
+            { id: 'sports', label: 'SPORTS', icon: 'ri-basketball-line' },
+            { id: 'kids-toddlers', label: 'KIDS AND TODDLERS', icon: 'ri-bear-smile-line' },
+            { id: 'pet-supplies', label: 'PET SUPPLIES', icon: 'ri-baidu-line' },
+            { id: 'men', label: 'MEN', icon: 'ri-men-line' },
+            { id: 'women', label: 'WOMEN', icon: 'ri-women-line' }
+        ];
+
+        const subcategories = {
+            'automobiles': ['bikes', 'cars', 'helmets', 'bike accessories', 'car accessories', 'EV'],
+            'watches': ['smart watch', 'analog watch', 'digital watch', 'digi log watch', 'vintage series'],
+            'electronics': ['television', 'mobile', 'laptop', 'gaming', 'camera', 'headphones', 'monitor', 'speaker'],
+            'home-appliances': ['refrigerator', 'AC', 'washing machine', 'dish washer', 'air fryer', 'kitchen supplies', 'air purifier'],
+            'bags-footwear': ['womens footwear', 'mens footwear', 'kids footwear', 'women bags', 'men bags', 'travel bags and luggage'],
+            'home-decor': ['wood furniture', 'kitchen and storage', 'home textile', 'bedroom accessories'],
+            'fitness': ['treadmill', 'fitness bike', 'walking pods', 'weights', 'home gym', 'gym accessories'],
+            'sports': ['cricket', 'football', 'badminton', 'swimming', 'table tennis', 'boxing'],
+            'kids-toddlers': ['girls clothing', 'boys clothing', 'baby care', 'kids toys'],
+            'pet-supplies': ['dog food', 'cat food', 'birds', 'aquarium'],
+            'men': ['top wear', 'bottom wear', 'inner wear', 'ethnic wear', 'sports wear', 'winter wear', 'accessories'],
+            'women': ['top wear', 'bottom wear', 'inner wear', 'ethnic wear', 'sports wear', 'accessories']
+        };
+
+        // --- References ---
+        const sidebar = document.getElementById('sidebar'); // Used for class toggle
+        const sidebarList = document.getElementById('sidebar-categories');
+        const contentArea = document.getElementById('contentArea');
+        const themeToggle = document.getElementById('themeToggle');
+        const toggleIcon = themeToggle.querySelector('i');
+        const searchInput = document.getElementById('searchInput');
+        const menuToggle = document.getElementById('menuToggle');
+        const overlay = document.getElementById('overlay');
+
+        let currentCatId = null;
+
+        // --- Initialization ---
+        initTheme();
+        renderSidebar();
+
+        // --- Mobile Menu Logic ---
+        menuToggle.addEventListener('click', () => {
+            sidebar.classList.add('open');
+            overlay.classList.add('active');
+        });
+
+        overlay.addEventListener('click', () => {
+            sidebar.classList.remove('open');
+            overlay.classList.remove('active');
+        });
+
+        function closeMobileMenu() {
+            sidebar.classList.remove('open');
+            overlay.classList.remove('active');
+        }
+
+        // --- Theme Logic ---
+        function initTheme() {
+            const saved = localStorage.getItem('theme') || 'dark';
+            document.documentElement.setAttribute('data-theme', saved);
+            updateToggleIcon(saved);
+
+            themeToggle.addEventListener('click', (e) => {
+                createRipple(e);
+                const current = document.documentElement.getAttribute('data-theme');
+                const next = current === 'dark' ? 'light' : 'dark';
+                document.documentElement.setAttribute('data-theme', next);
+                localStorage.setItem('theme', next);
+                updateToggleIcon(next);
+            });
+        }
+
+        function updateToggleIcon(theme) {
+            // Simple rotation/morph
+            toggleIcon.style.opacity = 0;
+            setTimeout(() => {
+                toggleIcon.className = theme === 'dark' ? 'ri-moon-line' : 'ri-sun-line';
+                toggleIcon.style.opacity = 1;
+            }, 200);
+        }
+
+        // --- Search Logic ---
+        searchInput.addEventListener('input', (e) => {
+            const query = e.target.value.toLowerCase().trim();
+
+            if (!query) {
+                if (currentCatId) {
+                    renderSubcategories(currentCatId);
+                } else {
+                    contentArea.innerHTML = ''; // Or welcome message
+                }
+                return;
+            }
+
+            let results = [];
+            // Iterate all categories
+            Object.keys(subcategories).forEach(catId => {
+                const subs = subcategories[catId];
+                const matches = subs.filter(s => s.toLowerCase().includes(query));
+                if (matches.length > 0) {
+                    const catLabel = categories.find(c => c.id === catId)?.label || catId;
+                    matches.forEach(m => results.push({ sub: m, catId: catId, catLabel: catLabel }));
+                }
+            });
+
+            renderSearchResults(results, query);
+        });
+
+        function renderSearchResults(results, query) {
+            if (results.length === 0) {
+                contentArea.innerHTML = `<div class="card animate-in"><div class="card-content"><h3>No Items Found</h3><p>No matches for "${query}"</p></div></div>`;
+                return;
+            }
+
+            document.getElementById('pageTitle').textContent = `Search Results`;
+            document.getElementById('breadcrumb').textContent = `SEARCH / "${query}"`;
+
+            let html = '<div class="subgrid">';
+            results.forEach((item, i) => {
+                html += `
+                <div class="card animate-in" style="animation-delay: ${i * 50}ms" data-sub="${item.sub}" data-cat="${item.catId}">
+                    <div class="card-content">
+                        <div class="badge" style="background:var(--accent); color:white; margin-bottom:8px">${item.catLabel}</div>
+                        <div class="title">${item.sub}</div>
+                        <div class="meta">View Top Products</div>
+                    </div>
+                </div>`;
+            });
+            html += '</div><div id="productsHolder"></div>';
+            contentArea.innerHTML = html;
+
+            // Add Handlers
+            contentArea.querySelectorAll('.card').forEach(card => {
+                addTiltEffect(card);
+                card.addEventListener('click', (e) => {
+                    createRipple(e);
+                    showProducts(card.dataset.sub);
+                });
+            });
+        }
+
+        // --- Rendering ---
+        function renderSidebar() {
+            sidebarList.innerHTML = categories.map((c, i) => `
+            <div class="cat animate-in" style="animation-delay: ${i * 40}ms" data-id="${c.id}">
+                <i class="${c.icon}"></i> ${c.label}
+            </div>
+        `).join('');
+
+            sidebarList.querySelectorAll('.cat').forEach(cat => {
+                cat.addEventListener('click', (e) => {
+                    createRipple(e);
+                    // Active class
+                    sidebarList.querySelectorAll('.cat').forEach(x => x.classList.remove('active'));
+                    cat.classList.add('active');
+                    currentCatId = cat.dataset.id;
+                    searchInput.value = ''; // Clear search on cat switch
+
+                    // On mobile, close sidebar after selection
+                    if (window.innerWidth <= 860) {
+                        closeMobileMenu();
+                    }
+
+                    renderSubcategories(currentCatId);
+                });
+            });
+        }
+
+        function renderSubcategories(catId, filter = '') {
+            const cat = categories.find(c => c.id === catId);
+            document.getElementById('pageTitle').textContent = cat.label;
+            document.getElementById('breadcrumb').textContent = `HOME / ${cat.label}`;
+
+            let subs = subcategories[catId] || [];
+
+            // Filter
+            if (filter) {
+                subs = subs.filter(s => s.toLowerCase().includes(filter));
+            }
+
+            if (subs.length === 0) {
+                contentArea.innerHTML = `<div class="card animate-in"><div class="card-content"><h3>No Items Found</h3><p>Try a different search term.</p></div></div>`;
+                return;
+            }
+
+            let html = '<div class="subgrid">';
+            subs.forEach((s, i) => {
+                html += `
+                <div class="card animate-in" style="animation-delay: ${i * 50}ms" data-sub="${s}">
+                    <div class="card-content">
+                        <div class="title">${s}</div>
+                        <div class="meta">View Top Products</div>
+                    </div>
+                </div>`;
+            });
+            html += '</div><div id="productsHolder"></div>';
+            contentArea.innerHTML = html;
+
+            // Add 3D Tilt and Click handlers
+            contentArea.querySelectorAll('.card').forEach(card => {
+                addTiltEffect(card);
+                card.addEventListener('click', (e) => {
+                    createRipple(e);
+                    showProducts(card.dataset.sub);
+                });
+            });
+        }
+
+        function showProducts(sub) {
+            const holder = document.getElementById('productsHolder');
+
+            // Logic: Show exactly 2 products: Sponsored & Top Rated
+            const products = [
+                { type: 'sponsored', label: 'Sponsored', name: `${sub} - Premium Choice`, price: '₹' + (Math.random() * 5000 + 2000).toFixed(0) },
+                { type: 'top-rated', label: 'Top Rated Product', name: `${sub} - Best Seller`, price: '₹' + (Math.random() * 3000 + 1000).toFixed(0) }
+            ];
+
+            let html = `<h2 class="animate-in" style="margin-top:40px; margin-bottom: 20px;">${sub}</h2><div class="products">`;
+            products.forEach((p, i) => {
+                html += `
+                <div class="card animate-in" style="animation-delay: ${i * 80}ms">
+                    <div class="card-content">
+                        <div class="badge ${p.type}">${p.label}</div>
+                        <div style="height:180px; background:rgba(0,0,0,0.1); border-radius:12px; margin-bottom:12px; display:flex; align-items:center; justify-content:center;">
+                           <i class="ri-shopping-bag-3-line" style="font-size:4rem; opacity:0.5"></i>
+                        </div>
+                        <div class="title" style="font-size:1.4rem">${p.name}</div>
+                        <div style="color:var(--accent); font-weight:bold; font-size:1.2rem">${p.price}</div>
+                        <div class="meta" style="margin-top:8px">★★★★★ (4.9)</div>
+                    </div>
+                </div>`;
+            });
+            html += '</div>';
+            holder.innerHTML = html;
+            holder.scrollIntoView({ behavior: 'smooth', block: 'start' });
+
+            holder.querySelectorAll('.card').forEach(c => {
+                addTiltEffect(c);
+            });
+        }
+
+        // --- Effects ---
+        // 3D Tilt
+        function addTiltEffect(card) {
+            card.addEventListener('mousemove', (e) => {
+                const rect = card.getBoundingClientRect();
+                const x = e.clientX - rect.left;
+                const y = e.clientY - rect.top;
+
+                const centerX = rect.width / 2;
+                const centerY = rect.height / 2;
+
+                const rotateX = ((y - centerY) / centerY) * -10;
+                const rotateY = ((x - centerX) / centerX) * 10;
+
+                card.style.transform = `perspective(1000px) rotateX(${rotateX}deg) rotateY(${rotateY}deg) scale(1.02)`;
+            });
+
+            card.addEventListener('mouseleave', () => {
+                card.style.transform = 'perspective(1000px) rotateX(0) rotateY(0) scale(1)';
+            });
+        }
+
+        // Ripple
+        function createRipple(event) {
+            const button = event.currentTarget;
+            const circle = document.createElement('span');
+            const diameter = Math.max(button.clientWidth, button.clientHeight);
+            const radius = diameter / 2;
+
+            const rect = button.getBoundingClientRect();
+
+            circle.style.width = circle.style.height = `${diameter}px`;
+            circle.style.left = `${event.clientX - rect.left - radius}px`;
+            circle.style.top = `${event.clientY - rect.top - radius}px`;
+            circle.classList.add('ripple');
+
+            const ripple = button.getElementsByClassName('ripple')[0];
+            if (ripple) ripple.remove();
+
+            button.appendChild(circle);
+        }
+    </script>
 </body>
 
 </html>
