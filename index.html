@@ -1,57 +1,49 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="en">
 
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Antigravity | Shop</title>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width,initial-scale=1" />
+    <title>Go Royal - Premium Shopping</title>
     <link rel="stylesheet" href="style.css">
-    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;700&display=swap" rel="stylesheet">
-    <script src="https://unpkg.com/lucide@latest"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;700;900&display=swap" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/remixicon@3.5.0/fonts/remixicon.css" rel="stylesheet">
 </head>
 
 <body>
-    <!-- Header -->
-    <header class="app-header">
-        <div class="header-content">
-            <button class="menu-btn mobile-only"><i data-lucide="menu"></i></button>
+    <!-- Animated Background -->
+    <div class="bg-mesh">
+        <div class="blob blob-1"></div>
+        <div class="blob blob-2"></div>
+        <div class="blob blob-3"></div>
+    </div>
+
+    <div class="app">
+        <aside class="sidebar glass">
             <div class="logo">
-                <span class="logo-icon"><i data-lucide="zap"></i></span>
-                <span class="logo-text">GoGrocy</span>
+                <i class="ri-vip-crown-fill"></i> Go Royal
             </div>
-            <div class="search-bar">
-                <i data-lucide="search" class="search-icon"></i>
-                <input type="text" placeholder="Search GoGrocy Products...">
-                <i data-lucide="camera" class="camera-icon"></i>
-            </div>
-            <div class="header-actions desktop-only">
-    <button class="icon-btn" id="theme-toggle" title="Toggle theme">
-        <i data-lucide="moon" id="theme-icon"></i>
-    </button>
-    <button class="icon-btn"><i data-lucide="user"></i></button>
-    <button class="icon-btn"><i data-lucide="shopping-cart"></i></button>
-</div>
-
-        </div>
-    </header>
-
-    <!-- Main Layout -->
-    <div class="app-container">
-        <!-- Sidebar Navigation -->
-        <aside class="sidebar">
-            <nav class="category-nav">
-                <!-- Categories will be injected by JS -->
-            </nav>
+            <div id="sidebar-categories"></div>
         </aside>
 
-        <!-- Main Content Area -->
-        <main class="main-content">
-            <div class="content-header">
-                <h2 id="category-title">Mobiles & Electronics</h2>
+        <main class="content glass">
+            <div class="header-row" style="display:flex; justify-content:space-between; align-items:center;">
+                <div>
+                    <div class="breadcrumb" id="breadcrumb"
+                        style="color:var(--text-secondary); text-transform:uppercase; letter-spacing:1px; font-size:0.8rem; margin-bottom:4px;">
+                        Home</div>
+                    <h1 id="pageTitle"
+                        style="font-size:3rem; margin:0; line-height:1; background: linear-gradient(to right, var(--text-primary), var(--accent)); background-clip: text; -webkit-background-clip: text; -webkit-text-fill-color: transparent;">
+                        Welcome</h1>
+                </div>
+
+                <div class="search-container">
+                    <input type="text" class="search-input" id="searchInput" placeholder="Search subcategories..." />
+                </div>
+
+                <button class="theme-toggle" id="themeToggle"><i class="ri-moon-line"></i></button>
             </div>
-            <div class="product-grid" id="product-grid">
-                <!-- Products will be injected by JS -->
-            </div>
+            <div id="contentArea"></div>
         </main>
     </div>
 
